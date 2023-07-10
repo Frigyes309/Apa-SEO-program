@@ -1,0 +1,13 @@
+model User {
+  id        Int     @id @default(autoincrement())
+  urlName      String
+  parentDomain     Boolean
+  domainReferer Boolean
+  domainFullReferer   String
+  domain      String
+  refererRating     Boolean
+  premiumLink     Boolean
+  premiumReferer     Boolean
+  premiumLinkReferer     Boolean
+  junkLink     Boolean
+}
