@@ -3,7 +3,7 @@ const prisma = new PrismaClient();
 
 async function createRandom(objectRepository: any) {
   const new_id = objectRepository.id;
-  const new_urlName = objectRepository.url;
+  const new_urlName = objectRepository.url; //TODO
   const new_parentDomain =
     objectRepository.domainFullReferer.substring(0, 4) == "www." ? true : false;
   const new_domainReferer =

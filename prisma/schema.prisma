@@ -10,16 +10,34 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model User {
-  id                 Int     @id @default(autoincrement())
-  urlName            String
-  parentDomain       Boolean
-  domainReferer      Boolean
-  domainFullReferer  String
-  domain             String
-  refererRating      Boolean
-  premiumLink        Boolean
-  premiumReferer     Boolean
-  premiumLinkReferer Boolean
-  junkLink           Boolean
+// model User {
+//   id                 Int     @id @default(autoincrement())
+//   urlName            String
+//   parentDomain       Boolean
+//   domainReferer      Boolean
+//   domainFullReferer  String
+//   domain             String
+//   refererRating      Boolean
+//   premiumLink        Boolean
+//   premiumReferer     Boolean
+//   premiumLinkReferer Boolean
+//   junkLink           Boolean
+// }
+
+model LinkedPage {
+  id   Int    @id @default(autoincrement())
+  link String
+}
+
+model ReferedPageMain {
+  id      Int    @id @default(autoincrement())
+  refpref String
+}
+
+model Domain {
+  dr        Int
+  raw       String @unique
+  protocol  Int //0-4, 0: https://www., 1: http://www., 2: https://, 3: http://
+  refPrefId Int
+  lpId      Int
 }
