@@ -31,14 +31,14 @@ model LinkedPage {
 
 model ReferredPageMain {
   id      Int    @id @default(autoincrement())
-  refpref String
+  refPref String  //wwww. itt van
   dr Int
 }
 
 model Domain {
   id        Int @id @default(autoincrement())
   raw       String
-  protocol  Int //0-4, 0: https://www., 1: http://www., 2: https://, 3: http://
+  protocol  Boolean //0: https://, 1: http://
   refPrefId Int
   lpId      Int
 }
