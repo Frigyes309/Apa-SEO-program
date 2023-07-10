@@ -1,0 +1,19 @@
+{
+  "name": "random-program",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Frigyes309/Apa-program.git"
+  },
+  "author": "Smuk Ferenc",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Frigyes309/Apa-program/issues"
+  },
+  "homepage": "https://github.com/Frigyes309/Apa-program#readme"
+}
