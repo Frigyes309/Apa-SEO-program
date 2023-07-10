@@ -29,14 +29,15 @@ model LinkedPage {
   link String
 }
 
-model ReferedPageMain {
+model ReferredPageMain {
   id      Int    @id @default(autoincrement())
   refpref String
+  dr Int
 }
 
 model Domain {
-  dr        Int
-  raw       String @unique
+  id        Int @id @default(autoincrement())
+  raw       String
   protocol  Int //0-4, 0: https://www., 1: http://www., 2: https://, 3: http://
   refPrefId Int
   lpId      Int
