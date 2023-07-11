@@ -7,8 +7,8 @@ async function insertToDb(objectRepository: any) {
     const first = objectRepository[0];
     excelToPrisma(first);
     objectRepository.forEach(async (element: any) => {
-        //let converted = excelToPrisma(element);
-        /*const resultLP = await prisma.linkedPage.findFirst({
+        let converted = excelToPrisma(element);
+        const resultLP = await prisma.linkedPage.findFirst({
             where: {
                 link: converted.link,
             },
@@ -49,12 +49,30 @@ async function insertToDb(objectRepository: any) {
                 refPrefId: converted.refPrefId,
                 lpId: converted.lpId,
             },
-        });*/
+        });
     });
     //Might need it in the future, but it is garbage information: the last column is the same as the previous one
     //two exact same links could be a problem
 }
 
+async function getDomainData() {
+    const result = await prisma.domain.findMany();
+    return result;
+}
+
+async function getReferredData() {
+    const result = await prisma.referredPageMain.findMany();
+    return result;
+}
+
+async function getLinkData() {
+    const result = await prisma.linkedPage.findMany();
+    return result;
+}
+
 module.exports = {
     insertToDb: insertToDb,
+    getDomainData: getDomainData,
+    getReferredData: getReferredData,
+    getLinkData: getLinkData,
 };

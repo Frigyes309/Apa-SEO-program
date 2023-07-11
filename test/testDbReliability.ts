@@ -2,7 +2,7 @@ const { PrismaClient } = require("@prisma/client");
 const prisma = new PrismaClient();
 
 async function createRandom(objectRepository: any) {
-  const new_id = objectRepository.id;
+    /*const new_id = objectRepository.id;
   const new_urlName = objectRepository.url; //TODO
   const new_parentDomain =
     objectRepository.domainFullReferer.substring(0, 4) == "www." ? true : false;
@@ -31,17 +31,17 @@ async function createRandom(objectRepository: any) {
       premiumLinkReferer: new_premiumLinkReferer,
       junkLink: new_junkLink,
     },
-  });
+  });*/
 }
 
 async function load() {
-  const row = prisma.user.findUnique({
+    /*const row = prisma.user.findUnique({
     where: { id: 1 },
   });
-  return row;
+  return row;*/
 }
 
 module.exports = {
-  CreateRandom: createRandom,
-  Load: load,
+    /*CreateRandom: createRandom,
+  Load: load,*/
 };

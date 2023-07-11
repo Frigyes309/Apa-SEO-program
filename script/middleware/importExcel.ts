@@ -6,7 +6,6 @@ async function readExcel() {
     const worksheet =
         XLSX.readFile(path).Sheets[XLSX.readFile(path).SheetNames[0]];
     const data = XLSX.utils.sheet_to_json(worksheet, { header: 1 });
-    //console.log(data[1]);
     insertToDb(data);
 }
 

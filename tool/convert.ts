@@ -12,14 +12,6 @@ async function excelToPrisma(objectRepository: any) {
     converted.link = objectRepository[2];
     converted.protocol = objectRepository[1][4] == "s";
 
-    /*const url = objectRepository[1];
-    const result = url.match(/\/\/([^/]+)/);
-    if (result && result[1]) {
-        converted.refPref = result[1];
-        console.log(converted.refPref);
-    } else {
-        console.log("Nem található megfelelő rész a szövegben.");
-    }*/
     converted.refPref = objectRepository[1].match(/\/\/([^/]+)/)[1];
 
     const index = objectRepository[1].substring(8).indexOf("/");
@@ -30,7 +22,7 @@ async function excelToPrisma(objectRepository: any) {
     }
 
     console.log(converted);
-    return null; //! TODO
+    return converted;
 }
 
 module.exports = {

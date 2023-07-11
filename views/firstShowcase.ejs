@@ -1,0 +1,57 @@
+<html>
+    <head>
+        <title>First Showcase</title>
+    </head>
+    <body>
+        <h1>Domain tábla adatai:</h1>
+        <table>
+            <tr>
+                <th>Id</th>
+                <th>Raw</th>
+                <th>Protocol</th>
+                <th>RefPrefId</th>
+                <th>LpId</th>
+            </tr>
+            <% for (let index = 0; index < domainData.length && index < 50; index++) { %>	
+                <tr>
+                    <td><% domainData[index].id %></td>
+                    <td><% domainData[index].raw %></td>
+                    <td><% domainData[index].protocol %></td>
+                    <td><% domainData[index].refPrefId %></td>
+                    <td><% domainData[index].lpId %></td>
+                </tr>
+            <% } %>
+        </table>
+        <h1>ReferredPageMain tábla adatai:</h1>
+        <table>
+            <tr>
+                <th>Id</th>
+                <th>RefPref</th>
+                <th>DR</th>
+            </tr>
+            <% for (let index = 0; index < referredData.length && index < 50; index++) { %>	
+                <tr>
+                    <td><% referredData[index].id %></td>
+                    <td><% referredData[index].refPref %></td>
+                    <td><% referredData[index].dr %></td>
+                </tr>
+            <% } %>
+        </table>
+        <h1>LinkedPage tábla adatai:</h1>
+        <table>
+            <tr>
+                <th>Id</th>
+                <th>Raw</th>
+                <th>Protocol</th>
+                <th>RefPrefId</th>
+                <th>LpId</th>
+            </tr>
+            <% for (let index = 0; index < linkData.length && index < 50; index++) { %>	
+                <tr>
+                    <td><% linkData[index].id %></td>
+                    <td><% linkData[index].link %></td>
+                </tr>
+            <% } %>
+        </table>
+    </body>
+</html>
