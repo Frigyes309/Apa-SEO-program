@@ -21,7 +21,7 @@ async function excelToPrisma(objectRepository: any) {
         converted.raw = objectRepository[1].substring(index + 1 + 8);
     }
 
-    console.log(converted);
+    //console.log(converted);
     return converted;
 }
 

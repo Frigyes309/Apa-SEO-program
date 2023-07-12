@@ -4,6 +4,7 @@ const { readExcel } = require("./script/middleware/importExcel");
 const { getDomainData } = require("./script/db/db");
 const { getReferredData } = require("./script/db/db");
 const { getLinkData } = require("./script/db/db");
+const { rowCount } = require("./script/db/db");
 
 const express = require("express");
 const app = express();
@@ -11,14 +12,34 @@ const port = 3000;
 app.set("view engine", "ejs");
 
 app.get("/create", async (req: any, res: any) => {
-    readExcel();
+    await readExcel();
+    res.render("createPage");
 });
 
-app.get("/", (req: any, res: any) => {
+app.get("/", async (req: any, res: any) => {
+    const domain = await getDomainData();
+    const referred = await getReferredData();
+    const link = await getLinkData();
+    const countOfRows = await rowCount();
     res.render("firstShowcase", {
-        domainData: getDomainData(),
-        referredData: getReferredData(),
-        linkData: getLinkData(),
+        domainData: domain,
+        referredData: referred,
+        linkData: link,
+        countOfRows: countOfRows,
+    });
+});
+
+app.get("/data", async (req: any, res: any) => {
+    
+    const domain = await getDomainData();
+    const referred = await getReferredData();
+    const link = await getLinkData();
+    const countOfRows = await rowCount();
+    res.render("firstShowcase", {
+        domainData: domain,
+        referredData: referred,
+        linkData: link,
+        countOfRows: countOfRows,
     });
 });
 
