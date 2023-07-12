@@ -160,7 +160,6 @@ async function insertToDb(objectRepository: any) {
 
 async function getDomainData() {
     const result = await prisma.domain.findMany();
-    console.log(result[0]);
     return result;
 }
 

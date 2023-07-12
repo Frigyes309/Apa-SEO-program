@@ -4,9 +4,9 @@
         <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     </head>
     <body>
-        <h1>Count of rows: <% countOfRows %></h1>
+        <h1><%= "Count of rows: " + numberOfRows %></h1>
         <div class="container">
-            <h1>Domain tábla adatai:</h1>
+            <!-- <h1>Domain tábla adatai:</h1>
             <table class="table">
                 <thead>
                     <tr>
@@ -20,11 +20,11 @@
                 <tbody>
                     <% for (let index = 0; index < domainData.length && index < 50; index++) { %>	
                         <tr>
-                            <td><% domainData[index].id %></td>
-                            <td><% domainData[index].raw %></td>
-                            <td><% domainData[index].protocol %></td>
-                            <td><% domainData[index].refPrefId %></td>
-                            <td><% domainData[index].lpId %></td>
+                            <td><%= domainData[index].id %></td>
+                            <td><%= domainData[index].raw %></td>
+                            <td><%= domainData[index].protocol %></td>
+                            <td><%= domainData[index].refPrefId %></td>
+                            <td><%= domainData[index].lpId %></td>
                         </tr>
                     <% } %>
                 </tbody>
@@ -42,9 +42,9 @@
                 <tbody>
                     <% for (let index = 0; index < referredData.length && index < 50; index++) { %>	
                         <tr>
-                            <td><% referredData[index].id %></td>
-                            <td><% referredData[index].refPref %></td>
-                            <td><% referredData[index].dr %></td>
+                            <td><%= referredData[index].id %></td>
+                            <td><%= referredData[index].refPref %></td>
+                            <td><%= referredData[index].dr %></td>
                         </tr>
                     <% } %>
                 </tbody>
@@ -55,38 +55,46 @@
                 <thead>
                     <tr>
                         <th>Id</th>
-                        <th>Raw</th>
-                        <th>Protocol</th>
-                        <th>RefPrefId</th>
-                        <th>LpId</th>
+                        <th>Linked Page</th>
                     </tr>
                 </thead>
                 <tbody>
                     <% for (let index = 0; index < linkData.length && index < 50; index++) { %>	
                         <tr>
-                            <td><% linkData[index].id %></td>
-                            <td><% linkData[index].link %></td>
+                            <td><%= linkData[index].id %></td>
+                            <td><%= linkData[index].link %></td>
                         </tr>
                     <% } %>
                 </tbody>
-            </table>
+            </table> -->
 
             <h1>Szumma adat:</h1>
             <table class="table">
                 <thead>
                     <tr>
                         <th>Id</th>
-                        <th>Raw</th>
-                        <th>Protocol</th>
-                        <th>RefPrefId</th>
-                        <th>LpId</th>
+                        <th>DR</th>
+                        <th>Linkek száma</th>
+                        <th>Referer</th>
+                        <option value="1">Biztosan van</option> <!-- Színezni -->
+                        <option value="2">Nem megállapítható</option>
+                        <option value="3">Nem vizsgált</option>
+                        <option value="4">Nincs</option>
+                        
+                        <th>Ment</th>
+                        <th>Belemegy</th>
+                        <th>Másol</th>
+                        <th>Kivesz</th>
+                        <!-- Másik oldalon lesz<th>Státusz</th> 
+                            <th>Kategória</th> <!-- Orvosi, Szórakozás, stb. -->
+                            <!-- Színezni Spam/Prémium/Tucat link/Normál-->
                     </tr>
                 </thead>
                 <tbody>
                     <% for (let index = 0; index < linkData.length && index < 50; index++) { %>	
                         <tr>
-                            <td><% linkData[index].id %></td>
-                            <td><% linkData[index].link %></td>
+                            <td><%= linkData[index].id %></td>
+                            <td><%= linkData[index].link %></td>
                         </tr>
                     <% } %>
                 </tbody>

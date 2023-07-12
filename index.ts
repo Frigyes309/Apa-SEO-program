@@ -30,7 +30,6 @@ app.get("/", async (req: any, res: any) => {
 });
 
 app.get("/data", async (req: any, res: any) => {
-    
     const domain = await getDomainData();
     const referred = await getReferredData();
     const link = await getLinkData();
@@ -39,7 +38,7 @@ app.get("/data", async (req: any, res: any) => {
         domainData: domain,
         referredData: referred,
         linkData: link,
-        countOfRows: countOfRows,
+        numberOfRows: countOfRows,
     });
 });
 
