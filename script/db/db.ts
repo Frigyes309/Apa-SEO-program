@@ -331,6 +331,18 @@ async function filterByAllLinkRedirection(parameters: any) {
     return objectRepository;
 }
 
+async function UpdateDomainOnRedirect(id: number, redirect: string) {
+    const result = await prisma.domain.update({
+        where: {
+            id: id,
+        },
+        data: {
+            redirect: redirect,
+        },
+    });
+    return true;
+}
+
 module.exports = {
     insertToDb: insertToDb,
     getDomainData: getDomainData,
@@ -341,4 +353,5 @@ module.exports = {
     getAllLinkRedirectionData: getAllLinkRedirectionData,
     deleteAllRecords: deleteAllRecords,
     filterByAllLinkRedirection: filterByAllLinkRedirection,
+    UpdateDomainOnRedirect: UpdateDomainOnRedirect,
 };

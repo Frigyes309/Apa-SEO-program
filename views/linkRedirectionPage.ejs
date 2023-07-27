@@ -161,6 +161,16 @@
         window.location.href = url;
       });
     });
+
+    function Save(id) {
+        event.preventDefault();
+        const formData = new FormData(filterForm);
+        //let queryParams = new URLSearchParams(formData).toString();
+        console.log(id);
+        const queryParams = new URLSearchParams(formData).toString() + "&dataId=" + id + "&dataString=" + document.getElementById(id + ".3").value;
+        const url = `/link-redirection?${queryParams}`;
+        window.location.href = url;
+    }
   </script>
 </head>
 <body>
@@ -246,7 +256,7 @@
               <td id="<%= linkData[index].id %>.5"><%= linkData[index].pageType %></td>
               <td id="<%= linkData[index].id %>.2"><%= linkData[index].linkCount %></td>
               <td id="<%= linkData[index].id %>.6"><%= linkData[index].category %></td>
-              <td id="<%= linkData[index].id %>.3"><input type="text" value="<%= linkData[index].redirectionTo %>"></td>
+              <td><input id="<%= linkData[index].id %>.3" type="text" value="<%= linkData[index].redirectionTo %>"></td>
               <td id="<%= linkData[index].id %>.4"><%= linkData[index].redirectionFrom %></td>
               <td>
                 <select name="actions" class="form-control color-td-by-status">
@@ -257,7 +267,7 @@
                 </select>
               </td>
               <td>
-                <button class="btn btn-primary">Mentés</button>
+                <button onclick="Save(<%= linkData[index].id %>)" class="btn btn-primary">Mentés</button>
                 <a href="/edit-one/<%= linkData[index].id %>"><button class="btn btn-secondary">Szerkesztés</button></a>
                 <button class="btn btn-info">Link másolása</button>
                 <button class="btn btn-warning">Átirányítás helyének törlése</button>

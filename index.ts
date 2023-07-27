@@ -8,6 +8,7 @@ const { rowCount } = require("./script/db/db");
 const { getDomainDataFromId } = require("./script/db/db");
 const { getAllLinkRedirectionData } = require("./script/db/db");
 const { deleteAllRecords } = require("./script/db/db");
+const { UpdateDomainOnRedirect } = require("./script/db/db");
 
 const express = require("express");
 const app = express();
@@ -76,7 +77,6 @@ app.get("/link-redirection", async (req: any, res: any) => {
             : "",
         orderby: req.query["orderBy"] ? req.query["orderBy"] : "ID",
     };
-    const objectRepository = await getAllLinkRedirectionData();
     const filteredObjectRepository = {
         drf: drMin ? drMin : "",
         drt: drMax ? drMax : "",
@@ -88,6 +88,13 @@ app.get("/link-redirection", async (req: any, res: any) => {
         category: req.query["category"] ? req.query["category"] : "Mindegyik",
         ob: req.query["orderBy"] ? req.query["orderBy"] : "ID",
     };
+    if (req.query["dataId"] != undefined) {
+        await UpdateDomainOnRedirect(
+            Number(req.query["dataId"]),
+            req.query["dataString"]
+        );
+    }
+    const objectRepository = await getAllLinkRedirectionData();
     Promise.all(objectRepository);
     res.render("linkRedirectionPage", {
         linkData: objectRepository,
