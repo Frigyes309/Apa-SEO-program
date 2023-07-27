@@ -178,10 +178,152 @@ async function rowCount() {
     return result;
 }
 
+async function getDomainDataFromId(id: number) {
+    const result = await prisma.domain.findFirst({
+        where: {
+            id: id,
+        },
+    });
+    if (result != null) {
+        const resultLink = await prisma.linkedPage.findFirst({
+            where: {
+                id: result.lpId,
+            },
+        });
+        const resultReferred = await prisma.referredPageMain.findFirst({
+            where: {
+                id: result.refPrefId,
+            },
+        });
+        if (resultLink != null && resultReferred != null) {
+            const objectRepository = {
+                dr: resultReferred.dr,
+                from: createFullLink(
+                    result.protocol,
+                    result.raw,
+                    resultReferred.refPref
+                ),
+                to: resultLink.link,
+                redirect: await result.redirect,
+                state: await result.state,
+            };
+            return objectRepository;
+        }
+    }
+    return null;
+}
+
+function createFullLink(protocol: boolean, raw: string, refPref: string) {
+    if (protocol == true) {
+        return "https://" + refPref + "/" + raw;
+    } else {
+        return "http://" + refPref + "/" + raw;
+    }
+}
+
+async function getAllLinkRedirectionData() {
+    const result = await prisma.domain.findMany({ take: 50 });
+    let objectRepository: any = [];
+    for (let i = 0; i < result.length; i++) {
+        const resultReferred = await prisma.referredPageMain.findFirst({
+            where: {
+                id: result[i].refPrefId,
+            },
+        });
+        if (resultReferred != null) {
+            let objectRepositoryElement = {
+                id: result[i].id,
+                dr: resultReferred.dr,
+                linkCount: await prisma.domain.count({
+                    where: {
+                        id: result[i].id,
+                    },
+                }),
+                redirectionFrom: resultReferred.refPref,
+                redirectionTo: result[i].redirect,
+                status: result[i].state,
+            };
+            objectRepository.push(objectRepositoryElement);
+        }
+    }
+    return objectRepository;
+}
+
+async function deleteAllRecords(id: number) {
+    prisma.domain.deleteMany();
+    prisma.linkedPage.deleteMany();
+    prisma.referredPageMain.deleteMany();
+}
+
+async function filterByAllLinkRedirection(parameters: any) {
+    const result = await prisma.domain.findMany({
+        take: 50,
+        skip: parameters.skip,
+        where: {
+            raw: { contains: parameters.raw },
+            redirect: { contains: parameters.redirect },
+            state: parameters.state,
+            isMainPage: parameters.isMainPage,
+            category: parameters.category,
+        },
+    });
+    let objectRepository: any = [];
+    for (let i = 0; i < result.length; i++) {
+        const resultReferred = await prisma.referredPageMain.findFirst({
+            where: {
+                id: result[i].refPrefId,
+                refPref: { contains: parameters.refPref },
+                dr: { gte: parameters.drMin, lte: parameters.drMax },
+            },
+        });
+        if (resultReferred != null) {
+            let objectRepositoryElement = {
+                id: result[i].id,
+                dr: resultReferred.dr,
+                linkCount: await prisma.domain.count({
+                    where: {
+                        id: result[i].id,
+                    },
+                }),
+                redirectionFrom: resultReferred.refPref,
+                redirectionTo: result[i].redirect,
+                status: result[i].state,
+            };
+            objectRepository.push(objectRepositoryElement);
+        }
+    }
+    if (parameters.orderby == "dr") {
+        objectRepository.sort((a: any, b: any) => {
+            return a.dr - b.dr;
+        });
+    } else if (parameters.orderby == "linkCount") {
+        objectRepository.sort((a: any, b: any) => {
+            return a.linkCount - b.linkCount;
+        });
+    } else if (parameters.orderby == "redirectionFrom") {
+        objectRepository.sort((a: any, b: any) => {
+            return a.redirectionFrom - b.redirectionFrom;
+        });
+    } else if (parameters.orderby == "redirectionTo") {
+        objectRepository.sort((a: any, b: any) => {
+            return a.redirectionTo - b.redirectionTo;
+        });
+    } else if (parameters.orderby == "status") {
+        objectRepository.sort((a: any, b: any) => {
+            return a.status - b.status;
+        });
+    }
+    return objectRepository;
+}
+
 module.exports = {
     insertToDb: insertToDb,
     getDomainData: getDomainData,
     getReferredData: getReferredData,
     getLinkData: getLinkData,
     rowCount: rowCount,
+    getDomainDataFromId: getDomainDataFromId,
+    getAllLinkRedirectionData: getAllLinkRedirectionData,
+    deleteAllRecords: deleteAllRecords,
+    filterByAllLinkRedirection: filterByAllLinkRedirection,
 };

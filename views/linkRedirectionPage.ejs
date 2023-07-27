@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Link átirányítása</title>
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+    }
+    .container {
+      margin-top: 20px;
+    }
+    .table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+    th, td {
+      padding: 8px;
+      text-align: center;
+      border-bottom: 1px solid #ddd;
+    }
+    th {
+      background-color: #f2f2f2;
+      font-weight: bold;
+    }
+    tr:nth-child(even) {
+      background-color: #f9f9f9;
+    }
+    button {
+      padding: 6px 12px;
+      margin-right: 5px;
+      border-radius: 4px;
+      font-size: 14px;
+      cursor: pointer;
+    }
+    td select {
+      width: 100%;
+      padding: 4px;
+      text-align: center;
+      box-sizing: border-box;
+    }
+    td select option[value="0"] {
+      background-color: green;
+      color: white;
+    }
+    td select option[value="1"] {
+      background-color: grey;
+      color: black;
+    }
+    td select option[value="2"] {
+      background-color: yellow;
+      color: black;
+    }
+    td select option[value="3"] {
+      background-color: red;
+      color: white;
+    }
+    td:nth-child(6) {
+      width: 1.5 times;
+    }
+    .color-td-by-status:has(option[value="0"]:checked) {
+      background-color: green;
+      color: black;
+    }
+    .color-td-by-status:has(option[value="1"]:checked) {
+      background-color: grey;
+      color: black;
+    }
+    .color-td-by-status:has(option[value="2"]:checked) {
+      background-color: yellow;
+      color: black;
+    }
+    .color-td-by-status:has(option[value="3"]:checked) {
+      background-color: red;
+      color: white;
+    }
+
+  </style>
+  <script>
+    document.addEventListener("DOMContentLoaded", function () {
+      const filterForm = document.getElementById("filterForm");
+      filterForm.addEventListener("submit", function (event) {
+        event.preventDefault();
+        const formData = new FormData(filterForm);
+        const queryParams = new URLSearchParams(formData).toString();
+        const url = `/link-redirection?${queryParams}`;
+        window.location.href = url;
+      });
+    });
+  </script>
+</head>
+<body>
+  <div>
+    <h1>Szűrők</h1>
+    <form id="filterForm" action="/link-redirection" method="GET">
+      <p>DR-tól
+      <input type="number" name="DRFrom" id="DRF"></p>
+      <p>DR-ig
+      <input type="number" name="DRTo" id="DRT">
+      <p>Linkek száma
+      <input type="number" name="linkCount" id="LC"></p>
+      <p>"Átirányítás: Ide" tartalmazza
+      <input type="text" name="redirectionFrom" id="RF"></p>
+      <p>"Átirányítás: Innen" tartalmazza
+      <input type="text" name="redirectionTo" id="RT"></p>
+      <p>Referer állapota
+      <select name="refererStatus" id="RS">
+        <option value="4" selected>Mindegy</option>
+        <option value="0">Biztosan van</option>
+        <option value="1">Nem megállapítható</option>
+        <option value="2">Nem vizsgált</option>
+        <option value="3">Nincs</option>
+      </select></p>
+      <p>Rendezés
+      <select name="OrderBy" id="OrderBy">
+        <!-- <option value="Random" selected>Random</option> -->
+        <option value="ID">ID</option>
+        <option value="DR">DR</option>
+        <option value="LinkCount">Linkek száma</option>
+        <option value="RedirectionTo">Átirányítás: Ide</option>
+        <option value="RedirectionFrom">Átirányítás: Innen</option>
+        <option value="RefererStatus">Referer állapota</option>
+      </select></p>
+      <button type="submit">Szűrés</button>
+    </form>
+  </div>
+  <div class="container">
+    <div class="table-responsive">
+      <table class="table">
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>DR</th>
+            <th>Linkek száma</th>
+            <th>Átirányítás: Ide</th>
+            <th>Átirányítás: Innen</th>
+            <th style="width: 230px;">Referer állapota</th>
+            <th>Műveletek</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% for (let index = 0; index < linkData.length && index < 50; index++) { %>
+            <tr>
+              <td id="<%= linkData[index].id %>.0">#<%= linkData[index].id %></td>
+              <td id="<%= linkData[index].id %>.1"><%= linkData[index].dr %></td>
+              <td id="<%= linkData[index].id %>.2"><%= linkData[index].linkCount %></td>
+              <td id="<%= linkData[index].id %>.3"><%= linkData[index].redirectionTo %></td>
+              <td id="<%= linkData[index].id %>.4"><%= linkData[index].redirectionFrom %></td>
+              <td>
+                <select name="actions" class="form-control color-td-by-status">
+                  <option value="0" <% if (linkData[index].refererStatus === 0) { %>selected<% } %>>Biztosan van</option>
+                  <option value="1" <% if (linkData[index].refererStatus === 1) { %>selected<% } %>>Nem megállapítható</option>
+                  <option value="2" <% if (linkData[index].refererStatus === 2 || linkData[index].refererStatus === undefined) { %>selected<% } %>>Nem vizsgált</option>
+                  <option value="3" <% if (linkData[index].refererStatus === 3) { %>selected<% } %>>Nincs</option>
+                </select>
+              </td>
+              <td>
+                <button class="btn btn-primary">Mentés</button>
+                <a href="/edit-one/<%= linkData[index].id %>"></a><button class="btn btn-secondary">Szerkesztés</button></a>
+                <button class="btn btn-info">Link másolása</button>
+                <button class="btn btn-warning">Átirányítás helyének törlése</button>
+                <button class="btn btn-danger">Sor törlése</button>
+              </td>
+            </tr>
+          <% } %>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>

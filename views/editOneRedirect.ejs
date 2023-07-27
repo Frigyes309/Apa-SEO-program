@@ -1,0 +1,44 @@
+<html>
+    <head>
+        <title>Link átirányítása</title>
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    </head>
+    <body>
+        <!-- <h1><%=// "Count of rows: " + numberOfRows %></h1> -->
+        <div class="container">
+            <h1>Szumma adat:</h1>
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>DR</th>
+                        <th>Honnan mutat a link</th>
+                        <th>Hova mutat a link</th>
+                        <th>Mire van átirányítva</th>
+                        <th>Státusz</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <% for (let index = 0; index < linkData.length && index < 50; index++) { %>	
+                        <tr>
+                            <td><%= singleInfo[index].dr %></td>
+                            <td><%= singleInfo[index].from %></td>
+                            <td><%= singleInfo[index].to %></td>
+                            <td><%= singleInfo[index].redirect %></td>
+                            <!-- Másik oldalon lesz<th>Státusz</th>  -->
+                            <td>                                
+                                <!-- Színezni Spam/Prémium/Tucat link/Normál-->
+                                <select name="actions">
+                                    <option value="normal" <% if (singleInfo[index].state === 0) { %>selected<% } %>>Normál</option>
+                                    <option value="spam" <% if (singleInfo[index].state === 1) { %>selected<% } %>>Spam</option>
+                                    <option value="premium" <% if (singleInfo[index].state === 2) { %>selected<% } %>>Prémium</option>
+                                    <option value="tucat" <% if (singleInfo[index].state === 3) { %>selected<% } %>>Tucat link</option>
+                                </select>
+                            </td>
+                        </tr>
+                    <% } %>
+                </tbody>
+            </table>
+        </div>
+        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    </body>
+</html>

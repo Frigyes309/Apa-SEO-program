@@ -23,8 +23,16 @@ model ReferredPageMain {
 
 model Domain {
   id        Int @id @default(autoincrement())
-  raw       String
+  raw       String @default("") //There may be a connection with main pae and having this empty
   protocol  Boolean //0: https://, 1: http://
   refPrefId Int
   lpId      Int
+  redirect  String @default("")
+  state     Int    @default(0) //0: normal, 1: spam, 2: premium, 3: tucat
+  refererStatus    Int    @default(2) //0: Surely has, 1: Don't know, 2: Never checked, 3: Serly does not have
+  isMainPage  Boolean @default(false) //Probably need to remove default after clearing the data
+  category  String  @default("")
+  
+  //Átírányítás ide
+  //minősítés ide
 }
