@@ -46,25 +46,54 @@ app.get("/data", async (req: any, res: any) => {
 });
 
 app.get("/link-redirection", async (req: any, res: any) => {
-    console.log(req.query["DRFrom"]);
+    let drMin = Number(req.query["DRFrom"]);
+    let drMax = Number(req.query["DRTo"]);
+    let lc = req.query["linkCount"];
+    if (drMin > drMax) {
+        const temp = drMin;
+        drMin = drMax;
+        drMax = temp;
+        if (drMin < 0) {
+            drMin = 0;
+        }
+        if (drMax > 100) {
+            drMax = 100;
+        }
+    }
+    if (lc < 1) {
+        lc = 1;
+    }
+    const parameters = {
+        skip: req.query["skip"] ? req.query["skip"] : 0,
+        redirect: req.query["redirectionTo"] ? req.query["redirectionTo"] : "",
+        state: req.query["state"] ? req.query["state"] : 5,
+        isMainPage: req.query["isMainPage"] ? req.query["isMainPage"] : 3,
+        category: req.query["category"] ? req.query["category"] : 0,
+        drMin: drMin ? drMin : 0,
+        drMax: drMax ? drMax : 100,
+        fromPage: req.query["redirectionFrom"]
+            ? req.query["redirectionFrom"]
+            : "",
+        orderby: req.query["orderBy"] ? req.query["orderBy"] : "ID",
+    };
     const objectRepository = await getAllLinkRedirectionData();
+    const filteredObjectRepository = {
+        drf: drMin ? drMin : "",
+        drt: drMax ? drMax : "",
+        lc: lc ? lc : "",
+        rf: req.query["redirectionFrom"] ? req.query["redirectionFrom"] : "",
+        rt: req.query["redirectionTo"] ? req.query["redirectionTo"] : "",
+        rs: req.query["refererStatus"] ? req.query["refererStatus"] : "",
+        pageType: req.query["pageType"] ? req.query["pageType"] : "Mindegyik",
+        category: req.query["category"] ? req.query["category"] : "Mindegyik",
+        ob: req.query["orderBy"] ? req.query["orderBy"] : "ID",
+    };
     Promise.all(objectRepository);
     res.render("linkRedirectionPage", {
         linkData: objectRepository,
+        filter: filteredObjectRepository,
+        categories: ["Kategória1"],
     });
-
-    /*const parameters = {
-        skip: req.query["skip"] ? req.query["skip"] : 0,
-        raw: req.query["raw"] ? req.query["raw"] : "",
-        redirect: req.query["redirect"] ? req.query["redirect"] : "",
-        state: req.query["state"] ? req.query["state"] : ,
-        isMainPage: req.query["isMainPage"] ? req.query["isMainPage"] : ,
-        category: req.query["category"] ? req.query["category"] : ,
-        refPref: req.query["refPref"] ? req.query["refPref"] : "",
-        drMin: req.query["drMin"] ? req.query["drMin"] : 0,
-        drMax: req.query["drMax"] ? req.query["drMax"] : 100,
-        orderby: req.query["orderby"] ? req.query["orderby"] : "ID",
-    }*/
 });
 
 app.get("/edit-one/:id", async (req: any, res: any) => {

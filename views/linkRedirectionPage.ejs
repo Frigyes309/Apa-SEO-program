@@ -1,44 +1,30 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Link átirányítása</title>
+  <title>Új Link Átirányítás</title>
   <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
   <style>
+    
     body {
       font-family: Arial, sans-serif;
+       background-color: #f8f8f8;
     }
     .container {
-      margin-top: 20px;
+      max-width: 100%;
+      margin: 0 auto;
+      padding: 20px;
     }
     .table {
       width: 100%;
       border-collapse: collapse;
     }
     th, td {
-      padding: 8px;
+      padding: 12px 10px;
       text-align: center;
       border-bottom: 1px solid #ddd;
     }
-    th {
-      background-color: #f2f2f2;
-      font-weight: bold;
-    }
-    tr:nth-child(even) {
-      background-color: #f9f9f9;
-    }
-    button {
-      padding: 6px 12px;
-      margin-right: 5px;
-      border-radius: 4px;
-      font-size: 14px;
-      cursor: pointer;
-    }
-    td select {
-      width: 100%;
-      padding: 4px;
-      text-align: center;
-      box-sizing: border-box;
-    }
+
+
     td select option[value="0"] {
       background-color: green;
       color: white;
@@ -75,6 +61,94 @@
       color: white;
     }
 
+
+
+    th {
+      background-color: #f2f2f2;
+      font-weight: bold;
+    }
+    tr:nth-child(even) {
+      background-color: #f9f9f9;
+    }
+    button {
+      padding: 8px 12px;
+      margin-right: 5px;
+      border-radius: 4px;
+      font-size: 14px;
+      cursor: pointer;
+    }
+    td select {
+      width: 100%;
+      padding: 4px;
+      text-align: center;
+      box-sizing: border-box;
+    }
+    .color-td-by-status option {
+      padding: 6px 12px;
+    }
+
+    .form-container {
+      background-color: #fff;
+      padding: 20px;
+      border-radius: 4px;
+      box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+    }
+
+    .table-responsive {
+      margin-top: 20px;
+    }
+
+    h1 {
+      font-size: 24px;
+      font-weight: bold;
+      margin-bottom: 20px;
+    }
+
+    .filter-section {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 20px;
+    }
+
+    .filter-section input[type="number"],
+    .filter-section select,
+    .filter-section input[type="text"] {
+      border: 1px solid #ddd;
+      padding: 8px 12px;
+      border-radius: 4px;
+    }
+
+    .filter-section button {
+      padding: 10px 18px;
+      background-color: #007bff;
+      color: #fff;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+    }
+
+    .filter-section button:hover {
+      background-color: #0056b3;
+    }
+
+    .table-container {
+      background-color: #fff;
+      border-radius: 4px;
+      box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+      overflow: hidden;
+    }
+
+    .table-responsive {
+      overflow-x: auto;
+    }
+
+    .table td,
+    .table th {
+      white-space: nowrap;
+    }
   </style>
   <script>
     document.addEventListener("DOMContentLoaded", function () {
@@ -90,61 +164,89 @@
   </script>
 </head>
 <body>
-  <div>
-    <h1>Szűrők</h1>
-    <form id="filterForm" action="/link-redirection" method="GET">
-      <p>DR-tól
-      <input type="number" name="DRFrom" id="DRF"></p>
-      <p>DR-ig
-      <input type="number" name="DRTo" id="DRT">
-      <p>Linkek száma
-      <input type="number" name="linkCount" id="LC"></p>
-      <p>"Átirányítás: Ide" tartalmazza
-      <input type="text" name="redirectionFrom" id="RF"></p>
-      <p>"Átirányítás: Innen" tartalmazza
-      <input type="text" name="redirectionTo" id="RT"></p>
-      <p>Referer állapota
-      <select name="refererStatus" id="RS">
-        <option value="4" selected>Mindegy</option>
-        <option value="0">Biztosan van</option>
-        <option value="1">Nem megállapítható</option>
-        <option value="2">Nem vizsgált</option>
-        <option value="3">Nincs</option>
-      </select></p>
-      <p>Rendezés
-      <select name="OrderBy" id="OrderBy">
-        <!-- <option value="Random" selected>Random</option> -->
-        <option value="ID">ID</option>
-        <option value="DR">DR</option>
-        <option value="LinkCount">Linkek száma</option>
-        <option value="RedirectionTo">Átirányítás: Ide</option>
-        <option value="RedirectionFrom">Átirányítás: Innen</option>
-        <option value="RefererStatus">Referer állapota</option>
-      </select></p>
-      <button type="submit">Szűrés</button>
-    </form>
-  </div>
   <div class="container">
-    <div class="table-responsive">
-      <table class="table">
-        <thead>
-          <tr>
-            <th>ID</th>
-            <th>DR</th>
-            <th>Linkek száma</th>
-            <th>Átirányítás: Ide</th>
-            <th>Átirányítás: Innen</th>
-            <th style="width: 230px;">Referer állapota</th>
-            <th>Műveletek</th>
-          </tr>
-        </thead>
-        <tbody>
-          <% for (let index = 0; index < linkData.length && index < 50; index++) { %>
+    <div class="form-container">
+      <h1>Szűrők</h1>
+      <form id="filterForm" action="/link-redirection" method="GET">
+        <div class="filter-section">
+          <p>DR-tól
+            <input type="number" name="DRFrom" id="DRF" value="<%= filter.drf %>">
+          </p>
+          <p>DR-ig
+            <input type="number" name="DRTo" id="DRT" value="<%= filter.drt %>">
+          </p>
+          <p>Oldal típusa
+            <select name="pageType" id="pageType">
+              <option value="Mindegyik" <% if (filter.pageType === "Mindegyik") { %>selected<% } %>>Mindegyik</option>
+              <option value="Fő" <% if (filter.pageType === "Fő") { %>selected<% } %>>Fő</option>
+              <option value="Al" <% if (filter.pageType === "Al") { %>selected<% } %>>Al</option>
+            </select>
+          </p>
+          <p>Linkek száma legalább
+            <input type="number" name="linkCount" id="LC" value="<%= filter.lc %>">
+          </p>
+          <p>Kategóriák
+            <select name="category">
+              <option value="Mindegyik" <% if (filter.category === "Mindegyik") { %>selected<% } %>>Mindegyik</option>
+              <% for (let index = 0; index < categories.length; index++) { %>
+              <option value="<%= categories[index] %>" <% if (filter.category == categories[index]) { %>selected<% } %>><%= categories[index] %></option>
+              <% } %>
+            </select>
+          </p>
+          <p>"Átirányítás: Ide" tartalmazza
+            <input type="text" name="redirectionFrom" id="RF" value="<%= filter.rf %>">
+          </p>
+          <p>"Átirányítás: Innen" tartalmazza
+            <input type="text" name="redirectionTo" id="RT" value="<%= filter.rt %>">
+          </p>
+          <p>Referer állapota
+            <select name="refererStatus" id="RS" value="<%= filter.rs %>">
+              <option value="4" <% if (filter.rs === "4") { %>selected<% } %>>Mindegy</option>
+              <option value="0" <% if (filter.rs === "0") { %>selected<% } %>>Biztosan van</option>
+              <option value="1" <% if (filter.rs === "1") { %>selected<% } %>>Nem megállapítható</option>
+              <option value="2" <% if (filter.rs === "2") { %>selected<% } %>>Nem vizsgált</option>
+              <option value="3" <% if (filter.rs === "3") { %>selected<% } %>>Nincs</option>
+            </select>
+          </p>
+          <p>Rendezés
+            <select name="orderBy" id="OrderBy" value="<%= filter.ob %>">
+              <option value="ID" <% if (filter.ob === "ID") { %>selected<% } %>>ID</option>
+              <option value="DR" <% if (filter.ob === "DR") { %>selected<% } %>>DR</option>
+              <option value="LinkCount" <% if (filter.ob === "LinkCount") { %>selected<% } %>>Linkek száma</option>
+              <option value="RedirectionTo" <% if (filter.ob === "RedirectionTo") { %>selected<% } %>>Átirányítás: Ide</option>
+              <option value="RedirectionFrom" <% if (filter.ob === "RedirectionFrom") { %>selected<% } %>>Átirányítás: Innen</option>
+              <option value="RefererStatus" <% if (filter.ob === "RefererStatus") { %>selected<% } %>>Referer állapota</option>
+            </select>
+          </p>
+          <button type="submit" class="btn btn-primary">Szűrés</button>
+        </div>
+      </form>
+    </div>
+    <div class="table-container">
+      <div class="table-responsive">
+        <table class="table">
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>DR</th>
+              <th>Típus (Fő/Al)</th>
+              <th>Linkek száma</th>
+              <th>Kategória</th>
+              <th>Átirányítás: Ide</th>
+              <th>Átirányítás: Innen</th>
+              <th style="width: 230px;">Referer állapota</th>
+              <th>Műveletek</th>
+            </tr>
+          </thead>
+          <tbody>
+            <% for (let index = 0; index < linkData.length && index < 50; index++) { %>
             <tr>
               <td id="<%= linkData[index].id %>.0">#<%= linkData[index].id %></td>
               <td id="<%= linkData[index].id %>.1"><%= linkData[index].dr %></td>
+              <td id="<%= linkData[index].id %>.5"><%= linkData[index].pageType %></td>
               <td id="<%= linkData[index].id %>.2"><%= linkData[index].linkCount %></td>
-              <td id="<%= linkData[index].id %>.3"><%= linkData[index].redirectionTo %></td>
+              <td id="<%= linkData[index].id %>.6"><%= linkData[index].category %></td>
+              <td id="<%= linkData[index].id %>.3"><input type="text" value="<%= linkData[index].redirectionTo %>"></td>
               <td id="<%= linkData[index].id %>.4"><%= linkData[index].redirectionFrom %></td>
               <td>
                 <select name="actions" class="form-control color-td-by-status">
@@ -156,15 +258,16 @@
               </td>
               <td>
                 <button class="btn btn-primary">Mentés</button>
-                <a href="/edit-one/<%= linkData[index].id %>"></a><button class="btn btn-secondary">Szerkesztés</button></a>
+                <a href="/edit-one/<%= linkData[index].id %>"><button class="btn btn-secondary">Szerkesztés</button></a>
                 <button class="btn btn-info">Link másolása</button>
                 <button class="btn btn-warning">Átirányítás helyének törlése</button>
                 <button class="btn btn-danger">Sor törlése</button>
               </td>
             </tr>
-          <% } %>
-        </tbody>
-      </table>
+            <% } %>
+          </tbody>
+        </table>
+      </div>
     </div>
   </div>
 

@@ -234,11 +234,13 @@ async function getAllLinkRedirectionData() {
             let objectRepositoryElement = {
                 id: result[i].id,
                 dr: resultReferred.dr,
+                pageType: result[i].isMainPage ? "Főoldal" : "Aloldal",
                 linkCount: await prisma.domain.count({
                     where: {
                         id: result[i].id,
                     },
                 }),
+                category: result[i].category,
                 redirectionFrom: resultReferred.refPref,
                 redirectionTo: result[i].redirect,
                 status: result[i].state,
@@ -256,27 +258,40 @@ async function deleteAllRecords(id: number) {
 }
 
 async function filterByAllLinkRedirection(parameters: any) {
+    let resultWhere = {
+        redirect: { contains: parameters.redirect },
+        state: undefined,
+        isMainPage: undefined,
+        category: undefined,
+    };
+    if (parameters.state != 5) {
+        resultWhere.state = parameters.state;
+    }
+    if (parameters.isMainPage != 3) {
+        resultWhere.isMainPage = parameters.isMainPage;
+    }
+    if (parameters.category != 0) {
+        resultWhere.category = parameters.category;
+    }
     const result = await prisma.domain.findMany({
         take: 50,
         skip: parameters.skip,
-        where: {
-            raw: { contains: parameters.raw },
-            redirect: { contains: parameters.redirect },
-            state: parameters.state,
-            isMainPage: parameters.isMainPage,
-            category: parameters.category,
-        },
+        where: resultWhere,
     });
     let objectRepository: any = [];
     for (let i = 0; i < result.length; i++) {
         const resultReferred = await prisma.referredPageMain.findFirst({
             where: {
                 id: result[i].refPrefId,
-                refPref: { contains: parameters.refPref },
                 dr: { gte: parameters.drMin, lte: parameters.drMax },
             },
         });
-        if (resultReferred != null) {
+        if (
+            resultReferred != null &&
+            (resultReferred.refPref + result[i].raw).includes(
+                parameters.fromPage
+            )
+        ) {
             let objectRepositoryElement = {
                 id: result[i].id,
                 dr: resultReferred.dr,
