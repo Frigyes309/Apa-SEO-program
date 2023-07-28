@@ -185,31 +185,42 @@ async function getDomainDataFromId(id: number) {
         },
     });
     if (result != null) {
-        const resultLink = await prisma.linkedPage.findFirst({
-            where: {
-                id: result.lpId,
-            },
-        });
         const resultReferred = await prisma.referredPageMain.findFirst({
             where: {
                 id: result.refPrefId,
             },
         });
-        if (resultLink != null && resultReferred != null) {
-            const objectRepository = {
-                dr: resultReferred.dr,
-                from: createFullLink(
-                    result.protocol,
-                    result.raw,
-                    resultReferred.refPref
-                ),
-                to: resultLink.link,
-                redirect: await result.redirect,
-                state: await result.state,
-            };
-            return objectRepository;
+        if (resultReferred != null) {
+            const objectRepository = await prisma.domain.findMany({
+                where: {
+                    refPrefId: result.refPrefId,
+                },
+            });
+            let objectRepository2 = [];
+            for (let i = 0; i < objectRepository.length; i++) {
+                const to = await prisma.linkedPage.findFirst({
+                    where: {
+                        id: objectRepository[i].lpId,
+                    },
+                });
+                if (to != null) {
+                    const objectRepositoryElement = {
+                        dr: resultReferred.dr,
+                        from:
+                            resultReferred.refPref +
+                            "/" +
+                            objectRepository[i].raw,
+                        to: to.link,
+                        redirect: objectRepository[i].redirect,
+                        state: objectRepository[i].state,
+                    };
+                    objectRepository2.push(objectRepositoryElement);
+                }
+            }
+            return objectRepository2;
         }
     }
+
     return null;
 }
 
@@ -240,6 +251,7 @@ async function getAllLinkRedirectionData() {
                         id: result[i].id,
                     },
                 }),
+                refererStatus: result[i].refererStatus,
                 category: result[i].category,
                 redirectionFrom: resultReferred.refPref,
                 redirectionTo: result[i].redirect,
@@ -331,15 +343,34 @@ async function filterByAllLinkRedirection(parameters: any) {
     return objectRepository;
 }
 
-async function UpdateDomainOnRedirect(id: number, redirect: string) {
+async function UpdateDomainOnRedirect(
+    id: number,
+    redirect: string,
+    referer: number
+) {
     const result = await prisma.domain.update({
         where: {
             id: id,
         },
         data: {
             redirect: redirect,
+            refererStatus: referer,
         },
     });
+    return true;
+}
+
+async function DeleteDomainRow(id: number) {
+    try {
+        const result = await prisma.domain.delete({
+            where: {
+                id: id,
+            },
+        });
+    } catch (error) {
+        console.log(error);
+        return false;
+    }
     return true;
 }
 
@@ -354,4 +385,5 @@ module.exports = {
     deleteAllRecords: deleteAllRecords,
     filterByAllLinkRedirection: filterByAllLinkRedirection,
     UpdateDomainOnRedirect: UpdateDomainOnRedirect,
+    DeleteDomainRow: DeleteDomainRow,
 };

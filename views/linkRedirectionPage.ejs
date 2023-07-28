@@ -165,18 +165,51 @@
     function Save(id) {
         event.preventDefault();
         const formData = new FormData(filterForm);
-        //let queryParams = new URLSearchParams(formData).toString();
-        console.log(id);
-        const queryParams = new URLSearchParams(formData).toString() + "&dataId=" + id + "&dataString=" + document.getElementById(id + ".3").value;
+        const queryParams = new URLSearchParams(formData).toString() 
+        + "&dataId=" + id + "&dataString=" + document.getElementById(id + ".3").value 
+        + "&dataReferer=" + document.getElementById(id + ".7").value;
         const url = `/link-redirection?${queryParams}`;
         window.location.href = url;
+    }
+
+    function Delete(id) {
+      document.getElementById(id + ".3").value = "";
+    }
+
+    function Copy(id) {
+      copyToClipboard(document.getElementById(id + ".3").value);
+    }
+
+    function copyToClipboard(text) {
+      const tempInput = document.createElement("input");
+      tempInput.value = text;
+      document.body.appendChild(tempInput);
+      tempInput.select();
+      tempInput.setSelectionRange(0, 99999);
+      document.execCommand("copy");
+      document.body.removeChild(tempInput);
+    }
+
+    function PermanentDelete(id) {
+      const userConfirmation = window.confirm("Biztosan törölni szeretnéd?");
+      if (userConfirmation) {
+        event.preventDefault();
+        const formData = new FormData(filterForm);
+        const queryParams = new URLSearchParams(formData).toString() 
+        + "&deleteId=" + id;
+        const url = `/link-redirection?${queryParams}`;
+        window.location.href = url;
+        alert("Törlés történt!");
+      } else {
+        alert("Nem történt törlés!");
+      }
     }
   </script>
 </head>
 <body>
   <div class="container">
     <div class="form-container">
-      <h1>Szűrők</h1>
+      <h1>Szűrők</h1> <!--! Kell majd oldalon lépkedő valami -->
       <form id="filterForm" action="/link-redirection" method="GET">
         <div class="filter-section">
           <p>DR-tól
@@ -259,7 +292,7 @@
               <td><input id="<%= linkData[index].id %>.3" type="text" value="<%= linkData[index].redirectionTo %>"></td>
               <td id="<%= linkData[index].id %>.4"><%= linkData[index].redirectionFrom %></td>
               <td>
-                <select name="actions" class="form-control color-td-by-status">
+                <select name="actions" class="form-control color-td-by-status" id="<%= linkData[index].id %>.7">
                   <option value="0" <% if (linkData[index].refererStatus === 0) { %>selected<% } %>>Biztosan van</option>
                   <option value="1" <% if (linkData[index].refererStatus === 1) { %>selected<% } %>>Nem megállapítható</option>
                   <option value="2" <% if (linkData[index].refererStatus === 2 || linkData[index].refererStatus === undefined) { %>selected<% } %>>Nem vizsgált</option>
@@ -269,9 +302,9 @@
               <td>
                 <button onclick="Save(<%= linkData[index].id %>)" class="btn btn-primary">Mentés</button>
                 <a href="/edit-one/<%= linkData[index].id %>"><button class="btn btn-secondary">Szerkesztés</button></a>
-                <button class="btn btn-info">Link másolása</button>
-                <button class="btn btn-warning">Átirányítás helyének törlése</button>
-                <button class="btn btn-danger">Sor törlése</button>
+                <button onclick="Copy(<%= linkData[index].id %>)" class="btn btn-info">Link másolása</button>
+                <button onclick="Delete(<%= linkData[index].id %>)" class="btn btn-warning">Átirányítás helyének törlése</button>
+                <button onclick="PermanentDelete(<%= linkData[index].id %>)" class="btn btn-danger">Sor törlése</button>
               </td>
             </tr>
             <% } %>

@@ -9,6 +9,7 @@ const { getDomainDataFromId } = require("./script/db/db");
 const { getAllLinkRedirectionData } = require("./script/db/db");
 const { deleteAllRecords } = require("./script/db/db");
 const { UpdateDomainOnRedirect } = require("./script/db/db");
+const { DeleteDomainRow } = require("./script/db/db");
 
 const express = require("express");
 const app = express();
@@ -91,8 +92,12 @@ app.get("/link-redirection", async (req: any, res: any) => {
     if (req.query["dataId"] != undefined) {
         await UpdateDomainOnRedirect(
             Number(req.query["dataId"]),
-            req.query["dataString"]
+            req.query["dataString"],
+            Number(req.query["dataReferer"])
         );
+    }
+    if (req.query["deleteId"] != undefined) {
+        await DeleteDomainRow(Number(req.query["deleteId"]));
     }
     const objectRepository = await getAllLinkRedirectionData();
     Promise.all(objectRepository);
@@ -104,9 +109,12 @@ app.get("/link-redirection", async (req: any, res: any) => {
 });
 
 app.get("/edit-one/:id", async (req: any, res: any) => {
-    const objectRepository = await getDomainDataFromId(req.params["id"]);
+    const objectRepository = await getDomainDataFromId(
+        Number(req.params["id"])
+    );
     res.render("editOneRedirect", {
         singleInfo: objectRepository,
+        //linkData: objectRepository,
     });
 });
 
