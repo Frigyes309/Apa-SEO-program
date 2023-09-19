@@ -17,7 +17,7 @@ model LinkedPage {
 
 model ReferredPageMain {
   id      Int    @id @default(autoincrement())
-  refPref String  //wwww. itt van
+  refPref String
   dr Int
 }
 
@@ -29,10 +29,31 @@ model Domain {
   lpId      Int
   redirect  String @default("")
   state     Int    @default(0) //0: normal, 1: spam, 2: premium, 3: tucat
-  refererStatus    Int    @default(2) //0: Surely has, 1: Don't know, 2: Never checked, 3: Serly does not have
-  isMainPage  Boolean @default(false) //Probably need to remove default after clearing the data
-  category  String  @default("")
-  
+  refererStatus    Int    @default(2) //0: Surely has, 1: Don't know, 2: Never checked, 3: Surely does not have
+  categoryId  Int @default(-1)
+  //anchorText String @default("") //Új tábla
+  anchorId  Int @default(0)
+  titleId   Int @default(0)
   //Átírányítás ide
   //minősítés ide
 }
+
+model Anchor {
+  id        Int @id @default(autoincrement())
+  anchorText String @default("")
+  anchorEnvironment String //remove if customer does not need it
+}
+
+model Title {
+  id        Int @id @default(autoincrement())
+  titleText String @default("")
+}
+
+model Categories {
+  id        Int @id @default(autoincrement())
+  categoryText String @default("")
+}
+
+//
+//network header -> request header -> referer
+//

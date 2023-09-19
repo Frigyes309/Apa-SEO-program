@@ -61,7 +61,25 @@
       color: white;
     }
 
+    .save-button {
 
+    }
+
+    .copy-button {
+
+    }
+
+    .delete-button {
+
+    }
+
+    .destroy-button {
+
+    }
+
+    .edit-button {
+
+    }
 
     th {
       background-color: #f2f2f2;
@@ -221,8 +239,8 @@
           <p>Oldal típusa
             <select name="pageType" id="pageType">
               <option value="Mindegyik" <% if (filter.pageType === "Mindegyik") { %>selected<% } %>>Mindegyik</option>
-              <option value="Fő" <% if (filter.pageType === "Fő") { %>selected<% } %>>Fő</option>
-              <option value="Al" <% if (filter.pageType === "Al") { %>selected<% } %>>Al</option>
+              <option value="Főoldal" <% if (filter.pageType === "Főoldal") { %>selected<% } %>>Főoldal</option>
+              <option value="Aloldal" <% if (filter.pageType === "Aloldal") { %>selected<% } %>>Aloldal</option>
             </select>
           </p>
           <p>Linkek száma legalább
@@ -237,10 +255,10 @@
             </select>
           </p>
           <p>"Átirányítás: Ide" tartalmazza
-            <input type="text" name="redirectionFrom" id="RF" value="<%= filter.rf %>">
+            <input type="text" name="redirectionTo" id="RF" value="<%= filter.rt %>">
           </p>
           <p>"Átirányítás: Innen" tartalmazza
-            <input type="text" name="redirectionTo" id="RT" value="<%= filter.rt %>">
+            <input type="text" name="redirectionFrom" id="RT" value="<%= filter.rf %>">
           </p>
           <p>Referer állapota
             <select name="refererStatus" id="RS" value="<%= filter.rs %>">
@@ -255,11 +273,19 @@
             <select name="orderBy" id="OrderBy" value="<%= filter.ob %>">
               <option value="ID" <% if (filter.ob === "ID") { %>selected<% } %>>ID</option>
               <option value="DR" <% if (filter.ob === "DR") { %>selected<% } %>>DR</option>
-              <option value="LinkCount" <% if (filter.ob === "LinkCount") { %>selected<% } %>>Linkek száma</option>
-              <option value="RedirectionTo" <% if (filter.ob === "RedirectionTo") { %>selected<% } %>>Átirányítás: Ide</option>
-              <option value="RedirectionFrom" <% if (filter.ob === "RedirectionFrom") { %>selected<% } %>>Átirányítás: Innen</option>
-              <option value="RefererStatus" <% if (filter.ob === "RefererStatus") { %>selected<% } %>>Referer állapota</option>
+              <option value="linkCount" <% if (filter.ob === "linkCount") { %>selected<% } %>>Linkek száma</option>
+              <option value="redirectionTo" <% if (filter.ob === "redirectionTo") { %>selected<% } %>>Átirányítás: Ide</option>
+              <option value="redirectionFrom" <% if (filter.ob === "redirectionFrom") { %>selected<% } %>>Átirányítás: Innen</option>
             </select>
+          </p>
+          <p>Rendezési sorrend
+            <select name="way" id="Way" value="<%= filter.way %>">
+              <option value="ASC" <% if (filter.way === "ASC") { %>selected<% } %>>Növekvő</option>
+              <option value="DESC" <% if (filter.way === "DESC") { %>selected<% } %>>Csökkenő</option>
+            </select>
+          </p>
+          <p>Oldalszám
+            <input type="number" name="skip" id="skip" value="<%= filter.pageNumber %>">
           </p>
           <button type="submit" class="btn btn-primary">Szűrés</button>
         </div>
@@ -286,7 +312,7 @@
             <tr>
               <td id="<%= linkData[index].id %>.0">#<%= linkData[index].id %></td>
               <td id="<%= linkData[index].id %>.1"><%= linkData[index].dr %></td>
-              <td id="<%= linkData[index].id %>.5"><%= linkData[index].pageType %></td>
+              <td id="<%= linkData[index].id %>.5"><%= linkData[index].isMainPage %></td>
               <td id="<%= linkData[index].id %>.2"><%= linkData[index].linkCount %></td>
               <td id="<%= linkData[index].id %>.6"><%= linkData[index].category %></td>
               <td><input id="<%= linkData[index].id %>.3" type="text" value="<%= linkData[index].redirectionTo %>"></td>
@@ -300,11 +326,11 @@
                 </select>
               </td>
               <td>
-                <button onclick="Save(<%= linkData[index].id %>)" class="btn btn-primary">Mentés</button>
-                <a href="/edit-one/<%= linkData[index].id %>"><button class="btn btn-secondary">Szerkesztés</button></a>
-                <button onclick="Copy(<%= linkData[index].id %>)" class="btn btn-info">Link másolása</button>
-                <button onclick="Delete(<%= linkData[index].id %>)" class="btn btn-warning">Átirányítás helyének törlése</button>
-                <button onclick="PermanentDelete(<%= linkData[index].id %>)" class="btn btn-danger">Sor törlése</button>
+                <button onclick="Save(<%= linkData[index].id %>)" class="btn btn-primary save-button">Mentés</button>
+                <a href="/edit-one/<%= linkData[index].id %>"><button class="edit-button btn btn-secondary">Szerkesztés</button></a>
+                <button onclick="Copy(<%= linkData[index].id %>)" class="btn btn-info copy-button">Másolás</button>
+                <button onclick="Delete(<%= linkData[index].id %>)" class="btn btn-warning delete-button">Szöveg törlés</button>
+                <button onclick="PermanentDelete(<%= linkData[index].id %>)" class="btn btn-danger destroy-button">Végleges törlés</button>
               </td>
             </tr>
             <% } %>

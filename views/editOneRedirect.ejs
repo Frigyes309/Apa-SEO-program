@@ -1,44 +1,287 @@
+<!DOCTYPE html>
 <html>
-    <head>
-        <title>Link átirányítása</title>
-        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
-    </head>
-    <body>
-        <!-- <h1><%=// "Count of rows: " + numberOfRows %></h1> -->
-        <div class="container">
-            <h1>Szumma adat:</h1>
-            <table class="table">
-                <thead>
-                    <tr>
-                        <th>DR</th>
-                        <th>Honnan mutat a link</th>
-                        <th>Hova mutat a link</th>
-                        <th>Mire van átirányítva</th>
-                        <th>Státusz</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <% for (let index = 0; index < singleInfo.length && index < 50; index++) { %>	
-                        <tr>
-                            <td><%= singleInfo[index].dr %></td>
-                            <td><%= singleInfo[index].from %></td>
-                            <td><%= singleInfo[index].to %></td>
-                            <td><%= singleInfo[index].redirect %></td>
-                            <!-- Másik oldalon lesz<th>Státusz</th>  -->
-                            <td>                                
-                                <!-- Színezni Spam/Prémium/Tucat link/Normál-->
-                                <select name="actions">
-                                    <option value="normal" <% if (singleInfo[index].state === 0) { %>selected<% } %>>Normál</option>
-                                    <option value="spam" <% if (singleInfo[index].state === 1) { %>selected<% } %>>Spam</option>
-                                    <option value="premium" <% if (singleInfo[index].state === 2) { %>selected<% } %>>Prémium</option>
-                                    <option value="tucat" <% if (singleInfo[index].state === 3) { %>selected<% } %>>Tucat link</option>
-                                </select>
-                            </td>
-                        </tr>
-                    <% } %>
-                </tbody>
-            </table>
-        </div>
-        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
-    </body>
+<head>
+  <title>Új Link Átirányítás</title>
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+  <style>
+    
+    body {
+      font-family: Arial, sans-serif;
+       background-color: #f8f8f8;
+    }
+    .container {
+      max-width: 100%;
+      margin: 0 auto;
+      padding: 20px;
+    }
+    .table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+    th, td {
+      padding: 12px 10px;
+      text-align: center;
+      border-bottom: 1px solid #ddd;
+    }
+
+
+    td select option[value="0"] {
+      background-color: green;
+      color: white;
+    }
+    td select option[value="1"] {
+      background-color: grey;
+      color: black;
+    }
+    td select option[value="2"] {
+      background-color: yellow;
+      color: black;
+    }
+    td select option[value="3"] {
+      background-color: red;
+      color: white;
+    }
+    td:nth-child(6) {
+      width: 1.5 times;
+    }
+    .color-td-by-status:has(option[value="0"]:checked) {
+      background-color: green;
+      color: black;
+    }
+    .color-td-by-status:has(option[value="1"]:checked) {
+      background-color: grey;
+      color: black;
+    }
+    .color-td-by-status:has(option[value="2"]:checked) {
+      background-color: yellow;
+      color: black;
+    }
+    .color-td-by-status:has(option[value="3"]:checked) {
+      background-color: red;
+      color: white;
+    }
+
+    .save-button {
+
+    }
+
+    .copy-button {
+
+    }
+
+    .delete-button {
+
+    }
+
+    .destroy-button {
+
+    }
+
+    .edit-button {
+
+    }
+
+    th {
+      background-color: #f2f2f2;
+      font-weight: bold;
+    }
+    tr:nth-child(even) {
+      background-color: #f9f9f9;
+    }
+    button {
+      padding: 8px 12px;
+      margin-right: 5px;
+      border-radius: 4px;
+      font-size: 14px;
+      cursor: pointer;
+    }
+    td select {
+      width: 100%;
+      padding: 4px;
+      text-align: center;
+      box-sizing: border-box;
+    }
+    .color-td-by-status option {
+      padding: 6px 12px;
+    }
+
+    .form-container {
+      background-color: #fff;
+      padding: 20px;
+      border-radius: 4px;
+      box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+    }
+
+    .table-responsive {
+      margin-top: 20px;
+    }
+
+    h1 {
+      font-size: 24px;
+      font-weight: bold;
+      margin-bottom: 20px;
+    }
+
+    .filter-section {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 20px;
+    }
+
+    .filter-section input[type="number"],
+    .filter-section select,
+    .filter-section input[type="text"] {
+      border: 1px solid #ddd;
+      padding: 8px 12px;
+      border-radius: 4px;
+    }
+
+    .filter-section button {
+      padding: 10px 18px;
+      background-color: #007bff;
+      color: #fff;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+    }
+
+    .filter-section button:hover {
+      background-color: #0056b3;
+    }
+
+    .table-container {
+      background-color: #fff;
+      border-radius: 4px;
+      box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+      overflow: hidden;
+    }
+
+    .table-responsive {
+      overflow-x: auto;
+    }
+
+    .table td,
+    .table th {
+      white-space: nowrap;
+    }
+  </style>
+  <script>
+    function AddCategory() {
+      var newCategory = prompt("Kategória neve:");
+      if (newCategory != null) {
+        let selects = document.getElementsByName("categoriesSelect")
+        for (let index = 0; index < selects.length; index++) {
+            var newOption = document.createElement("option");
+            newOption.value = newCategory;
+            newOption.text = newCategory;
+            selects[index].appendChild(newOption);
+        }
+        //post
+        var xhr = new XMLHttpRequest();
+        xhr.open("POST", window.location.href + "/add-category/" + newCategory, true);
+        xhr.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
+        var data = JSON.stringify({ category: newCategory });
+        xhr.send(data);
+        //post end
+      }
+    }
+
+    function Save(id) {
+        var redirect = document.getElementById(id + ".3").value;
+        var state = document.getElementById(id + ".4").value;
+        var category = document.getElementById(id + ".5").value;
+        //post
+        var xhr = new XMLHttpRequest();
+        xhr.open("POST", window.location.href + "/save/" + redirect + "/" + state + "/" + category, true);
+        var data = JSON.stringify({ redirect: redirect, state: state, category: category });
+        xhr.send(data);
+        //post end
+    }
+
+    function Delete(id) {
+      document.getElementById(id + ".3").value = "";
+    }
+
+    function Copy(id) {
+      copyToClipboard(document.getElementById(id + ".3").value);
+    }
+
+    function copyToClipboard(text) {
+      const tempInput = document.createElement("input");
+      tempInput.value = text;
+      document.body.appendChild(tempInput);
+      tempInput.select();
+      tempInput.setSelectionRange(0, 99999);
+      document.execCommand("copy");
+      document.body.removeChild(tempInput);
+    }
+
+    function PermanentDelete(id) {
+      const userConfirmation = window.confirm("Biztosan törölni szeretnéd?");
+      if (userConfirmation) {
+        event.preventDefault();
+        const formData = new FormData(filterForm);
+        const queryParams = new URLSearchParams(formData).toString() 
+        + "&deleteId=" + id;
+        const url = `/link-redirection?${queryParams}`;
+        window.location.href = url;
+        alert("Törlés történt!");
+      } else {
+        alert("Nem történt törlés!");
+      }
+    }
+  </script>
+</head>
+<body>
+  <div class="container">
+    <h1>Adatok:</h1>
+    <table class="table">
+      <thead>
+        <tr>
+          <th>DR</th>
+          <th>Honnan mutat a link</th>
+          <th>Hova mutat a link</th>
+          <th>Mire van átirányítva</th>
+          <th>Státusz</th>
+          <th>Kategória <button onclick="AddCategory()">Kategória hozzáadása</button></th>
+        </tr>
+      </thead>
+      <tbody>
+        <% for (let index = 0; index < singleInfo.length && index < 50; index++) { %>
+          <tr>
+            <td><%= singleInfo[index].dr %></td>
+            <td><%= singleInfo[index].from %></td>
+            <td><%= singleInfo[index].to %></td>
+            <td><input type="text" name="redirectionTo" id="<%= singleInfo[index].id %>.3" value="<%= singleInfo[index].redirect %>"></td>
+            <td>
+              <select name="actions" id="<%= singleInfo[index].id %>.4">
+                <option value="normal" <% if (singleInfo[index].state === 0) { %>selected<% } %>>Normál</option>
+                <option value="spam" <% if (singleInfo[index].state === 1) { %>selected<% } %>>Spam</option>
+                <option value="premium" <% if (singleInfo[index].state === 2) { %>selected<% } %>>Prémium</option>
+                <option value="tucat" <% if (singleInfo[index].state === 3) { %>selected<% } %>>Tucat link</option>
+              </select>
+              <%= singleInfo[index].state %>
+            </td>
+            <td><select name="categoriesSelect"  id="<%= singleInfo[index].id %>.5">
+                <option value="emptyCategory" <% if (singleInfo[index].category == '') { %> selected <% } %>></option>
+                <% for (let i = 0; i < categories.length; i++) { %>
+                    <option value="<%= categories[i] %>" <% if (singleInfo[index].category == categories[i]) { %> selected <% } %>><%= categories[i] %></option>
+                <% } %>
+            </select>
+            <td>
+                <button onclick="Save(<%= singleInfo[index].id %>)" class="btn btn-primary save-button">Mentés</button>
+                <button onclick="Copy(<%= singleInfo[index].id %>)" class="btn btn-info copy-button">Másolás</button>
+                <button onclick="Delete(<%= singleInfo[index].id %>)" class="btn btn-warning delete-button">Szöveg törlés</button>
+                <button onclick="PermanentDelete(<%= singleInfo[index].id %>)" class="btn btn-danger destroy-button">Végleges törlés</button>
+              </td>
+          </tr>
+        <% } %>
+      </tbody>
+    </table>
+  </div>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
 </html>
