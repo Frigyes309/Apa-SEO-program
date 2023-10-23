@@ -252,7 +252,10 @@
 
 <body>
   <div class="container">
-    <h1>Adatok:</h1>
+    <h1>
+      <a href="/link-redirection %>"><button class="edit-button btn btn-secondary">Vissza</button></a>
+      Adatok:
+    </h1>
     <table class="table">
       <thead>
         <tr>
@@ -264,6 +267,7 @@
           <th>Státusz</th>
           <th>Kategória <button onclick="AddCategory()">Kategória hozzáadása</button></th>
           <th>Horgony</th>
+          <th>Műveletek</th>
         </tr>
       </thead>
       <tbody>
@@ -288,6 +292,10 @@
               <option value="<%= categories[i] %>" <% if (singleInfo[index].category == categories[i]) { %> selected <% } %>><%= categories[i] %></option>
               <% } %>
             </select>
+          </td>
+          <td>
+            <p class="limited"><%= singleInfo[index].anchor %></p>
+          </td>
           <td>
             <button onclick="Save(<%= singleInfo[index].id %>)" class="btn btn-primary save-button">
               <i class="fas fa-save"></i>
@@ -298,7 +306,6 @@
             <button onclick="Delete(<%= singleInfo[index].id %>)" class="btn btn-warning delete-button"><i class="fas fa-times"></i></button>
             <button onclick="PermanentDelete(<%= singleInfo[index].id %>)" class="btn btn-danger destroy-button"><i class="fas fa-trash-alt"></i></button>
           </td>
-          <td><%= singleInfo[index].anchor %></td>
         </tr>
         <% } %>
       </tbody>
@@ -316,11 +323,12 @@
         // Get the text content of the paragraph
         var text = paragraph.textContent;
   
-        // Split the text into lines of 75 characters or less
+        // Split the text into lines of n characters or less
+        let n = 40;
         var lines = [];
         while (text.length > 0) {
-          lines.push(text.substring(0, 50));
-          text = text.substring(50);
+          lines.push(text.substring(0, n));
+          text = text.substring(n);
         }
   
         // Join the lines with a line break

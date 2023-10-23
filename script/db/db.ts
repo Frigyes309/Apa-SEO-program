@@ -152,34 +152,40 @@ async function getDomainDataFromId(id: number) {
             },
         });
         let objectRepository: any = [];
-        for (let i = 0; i < allSelected.length; i++) {
+        for (const selected of allSelected) {
             const resultReferred = await prisma.referredPageMain.findFirst({
                 where: {
-                    id: allSelected[i].refPrefId,
+                    id: selected.refPrefId,
                 },
             });
             const to = await prisma.linkedPage.findFirst({
                 where: {
-                    id: allSelected[i].lpId,
+                    id: selected.lpId,
                 },
             });
             const category = await prisma.categories.findFirst({
                 where: {
-                    id: allSelected[i].categoryId,
+                    id: selected.categoryId,
+                },
+            });
+            const anchor = await prisma.anchor.findFirst({
+                where: {
+                    id: selected.anchorId,
                 },
             });
             if (resultReferred != null && to != null) {
                 const objectRepositoryElement = {
-                    id: allSelected[i].id,
+                    id: selected.id,
                     dr: resultReferred.dr,
                     from:
-                        (allSelected[i].protocol ? "https://" : "http://") +
+                        (selected.protocol ? "https://" : "http://") +
                         resultReferred.refPref +
-                        allSelected[i].raw,
+                        selected.raw,
                     to: to.link,
-                    redirect: allSelected[i].redirect,
-                    state: allSelected[i].state,
+                    redirect: selected.redirect,
+                    state: selected.state,
                     category: category != null ? category.categoryText : "",
+                    anchor: anchor != null ? anchor.anchorText : "",
                 };
                 objectRepository.push(objectRepositoryElement);
             }
