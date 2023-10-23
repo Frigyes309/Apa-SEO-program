@@ -1,5 +1,5 @@
-const { getReferredPageMain } = require("../db/db");
-const { getCountOfLink } = require("../db/db");
+const { getReferredPageMain } = require('../db/db');
+const { getCountOfLink } = require('../db/db');
 
 async function getRows() {
     let objectRepository: {
@@ -30,18 +30,3 @@ async function getRows() {
 module.exports = {
     getRows: getRows,
 };
-
-/*
-<th>Id</th>
-                        <th>DR</th>
-                        <th>Linkek száma</th>
-                        <th>Referer</th>
-                        <option value="1">Biztosan van</option> <!-- Színezni -->
-                        <option value="2">Nem megállapítható</option>
-                        <option value="3">Nem vizsgált</option>
-                        <option value="4">Nincs</option>
-                        
-                        <th>Ment</th>
-                        <th>Belemegy</th>
-                        <th>Másol</th>
-                        <th>Kivesz</th>*/

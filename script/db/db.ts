@@ -249,6 +249,7 @@ async function filterByAllLinkRedirection(parameters: any) {
                 parameters.refererStatus == 4
                     ? undefined
                     : parameters.refererStatus,
+            id: parameters.id,
         },
     });
     let objectRepository: any = [];

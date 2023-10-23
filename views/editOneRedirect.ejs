@@ -247,6 +247,7 @@
           <th>Mire van átirányítva</th>
           <th>Státusz</th>
           <th>Kategória <button onclick="AddCategory()">Kategória hozzáadása</button></th>
+          <th>Horgony</th>
         </tr>
       </thead>
       <tbody>
@@ -276,7 +277,8 @@
                 <button onclick="Copy(<%= singleInfo[index].id %>)" class="btn btn-info copy-button">Másolás</button>
                 <button onclick="Delete(<%= singleInfo[index].id %>)" class="btn btn-warning delete-button">Szöveg törlés</button>
                 <button onclick="PermanentDelete(<%= singleInfo[index].id %>)" class="btn btn-danger destroy-button">Végleges törlés</button>
-              </td>
+            </td>
+            <td><%= singleInfo[index].anchor %></td>
           </tr>
         <% } %>
       </tbody>

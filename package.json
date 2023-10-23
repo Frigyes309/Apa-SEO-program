@@ -30,5 +30,12 @@
     "ts-node": "^10.9.1",
     "typescript": "^5.1.6"
   },
-  "description": ""
+  "description": "",
+  "prettier": {
+    "semi": true,
+    "singleQuote": true,
+    "trailingComma": "all",
+    "printWidth": 120,
+    "tabWidth": 4
+  }
 }

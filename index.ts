@@ -53,6 +53,8 @@ app.get("/data", async (req: any, res: any) => {
 });
 
 app.get("/link-redirection", async (req: any, res: any) => {
+    //console.log(req.query["id"] != "" && (Number)(req.query["id"]) != 0)
+    let id = req.query["id"] != undefined && req.query["id"] != "" && (Number)(req.query["id"]) != 0 ? (Number)(req.query["id"]) : undefined;
     let drMin = Number(req.query["DRFrom"]);
     let drMax = Number.isNaN(parseInt(req.query["DRTo"]))
         ? 100
@@ -107,6 +109,7 @@ app.get("/link-redirection", async (req: any, res: any) => {
         orderBy:
             req.query["orderBy"] != undefined ? req.query["orderBy"] : "ID",
         way: req.query["way"] != undefined ? req.query["way"] : "ASC",
+        id: id,
     };
     const filteredObjectRepository = {
         drf: drMin != undefined ? drMin : 0,
@@ -137,6 +140,7 @@ app.get("/link-redirection", async (req: any, res: any) => {
         ob: req.query["orderBy"] != undefined ? req.query["orderBy"] : "ID",
         pageNumber: req.query["skip"] != undefined ? req.query["skip"] : 1,
         way: req.query["way"] != undefined ? req.query["way"] : "ASC",
+        id: id,
     };
     if (req.query["dataId"] != undefined) {
         await UpdateDomainOnRedirect(

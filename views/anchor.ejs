@@ -223,34 +223,13 @@
       }
     }
   </script>
-  <script>
-    function clearFilters() {
-      event.preventDefault();
-      console.log("clear");
-      document.getElementById("ID").value = undefined;
-      document.getElementById("DRF").value = "";
-      document.getElementById("DRT").value = "";
-      document.getElementById("LC").value = "";
-      document.getElementById("RF").value = "";
-      document.getElementById("RT").value = "";
-      document.getElementById("RS").value = "4";
-      document.getElementById("OrderBy").value = "ID";
-      document.getElementById("Way").value = "ASC";
-      document.getElementById("skip").value = "1";
-      document.getElementById("pageType").value = "Mindegyik";
-      document.getElementById("category").value = "Mindegyik";
-    }
-  </script>
 </head>
 <body>
   <div class="container">
     <div class="form-container">
-      <h1>Szűrők</h1>
+      <h1>Szűrők</h1> <!--! Kell majd oldalon lépkedő valami -->
       <form id="filterForm" action="/link-redirection" method="GET">
         <div class="filter-section">
-          <p>ID
-            <input type="number" name="id" id="ID" value="<%= filter.id %>">
-          </p>
           <p>DR-tól
             <input type="number" name="DRFrom" id="DRF" value="<%= filter.drf %>">
           </p>
@@ -306,10 +285,9 @@
             </select>
           </p>
           <p>Oldalszám
-            <input type="number" name="skip" id="skip" value="<%= filter.pageNumber %>" min="1">
+            <input type="number" name="skip" id="skip" value="<%= filter.pageNumber %>">
           </p>
           <button type="submit" class="btn btn-primary">Szűrés</button>
-          <button class="btn btn-primary" onclick="clearFilters()">Szűrők törlése</button>
         </div>
       </form>
     </div>
@@ -320,7 +298,7 @@
             <tr>
               <th>ID</th>
               <th>DR</th>
-              <th>Fő/Al</th>
+              <th>Típus (Fő/Al)</th>
               <th>Linkek száma</th>
               <th>Kategória</th>
               <th>Átirányítás: Ide</th>
