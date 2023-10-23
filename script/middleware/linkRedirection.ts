@@ -13,7 +13,6 @@ async function getRows() {
     domain.forEach((element: any) => {
         const ref = getReferredPageMain(element.refPrefId);
         const link = getLinkData(element.lpId);
-        //? Ki tudja, hogy erre gondolt-e a költő
         let dataType = {
             id: element.id,
             dr: ref.sr,

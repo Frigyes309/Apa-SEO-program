@@ -174,7 +174,7 @@
       filterForm.addEventListener("submit", function (event) {
         event.preventDefault();
         const formData = new FormData(filterForm);
-        const queryParams = new URLSearchParams(formData).toString();
+        const queryParams = new URLSearchParams(formData).toString() + "&loaded=true";
         const url = `/link-redirection?${queryParams}`;
         window.location.href = url;
       });
@@ -308,7 +308,7 @@
           <p>Oldalszám
             <input type="number" name="skip" id="skip" value="<%= filter.pageNumber %>" min="1">
           </p>
-          <button type="submit" class="btn btn-primary">Szűrés</button>
+          <button type="submit" class="btn btn-primary" id="formButton">Szűrés</button>
           <button class="btn btn-primary" onclick="clearFilters()">Szűrők törlése</button>
         </div>
       </form>
@@ -363,5 +363,13 @@
   </div>
 
   <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+  <% if (loaded !== true) { %>
+    <script>
+      window.onload = function() {
+        document.getElementById("formButton").click();
+      }
+    </script>
+  <% } %>  
+  </script>
 </body>
 </html>
