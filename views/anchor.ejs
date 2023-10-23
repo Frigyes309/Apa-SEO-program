@@ -1,24 +1,29 @@
 <!DOCTYPE html>
 <html>
+
 <head>
   <title>Új Link Átirányítás</title>
   <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css">
   <style>
-    
     body {
       font-family: Arial, sans-serif;
-       background-color: #f8f8f8;
+      background-color: #f8f8f8;
     }
+
     .container {
       max-width: 100%;
       margin: 0 auto;
       padding: 20px;
     }
+
     .table {
       width: 100%;
       border-collapse: collapse;
     }
-    th, td {
+
+    th,
+    td {
       padding: 12px 10px;
       text-align: center;
       border-bottom: 1px solid #ddd;
@@ -29,65 +34,65 @@
       background-color: green;
       color: white;
     }
+
     td select option[value="1"] {
       background-color: grey;
       color: black;
     }
+
     td select option[value="2"] {
       background-color: yellow;
       color: black;
     }
+
     td select option[value="3"] {
       background-color: red;
       color: white;
     }
+
     td:nth-child(6) {
       width: 1.5 times;
     }
+
     .color-td-by-status:has(option[value="0"]:checked) {
       background-color: green;
       color: black;
     }
+
     .color-td-by-status:has(option[value="1"]:checked) {
       background-color: grey;
       color: black;
     }
+
     .color-td-by-status:has(option[value="2"]:checked) {
       background-color: yellow;
       color: black;
     }
+
     .color-td-by-status:has(option[value="3"]:checked) {
       background-color: red;
       color: white;
     }
 
-    .save-button {
+    .save-button {}
 
-    }
+    .copy-button {}
 
-    .copy-button {
+    .delete-button {}
 
-    }
+    .destroy-button {}
 
-    .delete-button {
-
-    }
-
-    .destroy-button {
-
-    }
-
-    .edit-button {
-
-    }
+    .edit-button {}
 
     th {
       background-color: #f2f2f2;
       font-weight: bold;
     }
+
     tr:nth-child(even) {
       background-color: #f9f9f9;
     }
+
     button {
       padding: 8px 12px;
       margin-right: 5px;
@@ -95,12 +100,14 @@
       font-size: 14px;
       cursor: pointer;
     }
+
     td select {
       width: 100%;
       padding: 4px;
       text-align: center;
       box-sizing: border-box;
     }
+
     .color-td-by-status option {
       padding: 6px 12px;
     }
@@ -168,26 +175,44 @@
       white-space: nowrap;
     }
   </style>
+
   <script>
-    document.addEventListener("DOMContentLoaded", function () {
-      const filterForm = document.getElementById("filterForm");
-      filterForm.addEventListener("submit", function (event) {
-        event.preventDefault();
-        const formData = new FormData(filterForm);
-        const queryParams = new URLSearchParams(formData).toString();
-        const url = `/link-redirection?${queryParams}`;
-        window.location.href = url;
-      });
-    });
+    function AddCategory() {
+      var newCategory = prompt("Kategória neve:");
+      if (newCategory != null) {
+        let selects = document.getElementsByName("categoriesSelect")
+        for (let index = 0; index < selects.length; index++) {
+          var newOption = document.createElement("option");
+          newOption.value = newCategory;
+          newOption.text = newCategory;
+          selects[index].appendChild(newOption);
+        }
+        //post
+        var xhr = new XMLHttpRequest();
+        xhr.open("POST", window.location.href + "/add-category/" + newCategory, true);
+        xhr.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
+        var data = JSON.stringify({
+          category: newCategory
+        });
+        xhr.send(data);
+        //post end
+      }
+    }
 
     function Save(id) {
-        event.preventDefault();
-        const formData = new FormData(filterForm);
-        const queryParams = new URLSearchParams(formData).toString() 
-        + "&dataId=" + id + "&dataString=" + document.getElementById(id + ".3").value 
-        + "&dataReferer=" + document.getElementById(id + ".7").value;
-        const url = `/link-redirection?${queryParams}`;
-        window.location.href = url;
+      var redirect = document.getElementById(id + ".3").value;
+      var state = document.getElementById(id + ".4").value;
+      var category = document.getElementById(id + ".5").value;
+      //post
+      var xhr = new XMLHttpRequest();
+      xhr.open("POST", window.location.href + "/save/" + redirect + "/" + state + "/" + category, true);
+      var data = JSON.stringify({
+        redirect: redirect,
+        state: state,
+        category: category
+      });
+      xhr.send(data);
+      //post end
     }
 
     function Delete(id) {
@@ -213,8 +238,8 @@
       if (userConfirmation) {
         event.preventDefault();
         const formData = new FormData(filterForm);
-        const queryParams = new URLSearchParams(formData).toString() 
-        + "&deleteId=" + id;
+        const queryParams = new URLSearchParams(formData).toString() +
+          "&deleteId=" + id;
         const url = `/link-redirection?${queryParams}`;
         window.location.href = url;
         alert("Törlés történt!");
@@ -224,122 +249,76 @@
     }
   </script>
 </head>
+
 <body>
   <div class="container">
-    <div class="form-container">
-      <h1>Szűrők</h1> <!--! Kell majd oldalon lépkedő valami -->
-      <form id="filterForm" action="/link-redirection" method="GET">
-        <div class="filter-section">
-          <p>DR-tól
-            <input type="number" name="DRFrom" id="DRF" value="<%= filter.drf %>">
-          </p>
-          <p>DR-ig
-            <input type="number" name="DRTo" id="DRT" value="<%= filter.drt %>">
-          </p>
-          <p>Oldal típusa
-            <select name="pageType" id="pageType">
-              <option value="Mindegyik" <% if (filter.pageType === "Mindegyik") { %>selected<% } %>>Mindegyik</option>
-              <option value="Főoldal" <% if (filter.pageType === "Főoldal") { %>selected<% } %>>Főoldal</option>
-              <option value="Aloldal" <% if (filter.pageType === "Aloldal") { %>selected<% } %>>Aloldal</option>
-            </select>
-          </p>
-          <p>Linkek száma legalább
-            <input type="number" name="linkCount" id="LC" value="<%= filter.lc %>">
-          </p>
-          <p>Kategóriák
-            <select name="category">
-              <option value="Mindegyik" <% if (filter.category === "Mindegyik") { %>selected<% } %>>Mindegyik</option>
-              <% for (let index = 0; index < categories.length; index++) { %>
-              <option value="<%= categories[index] %>" <% if (filter.category == categories[index]) { %>selected<% } %>><%= categories[index] %></option>
+    <h1>
+      <a href="/link-redirection %>"><button class="edit-button btn btn-secondary">Vissza</button></a>
+      Adatok:
+    </h1>
+    <table class="table">
+      <thead>
+        <tr>
+          <th>Mire van átirányítva</th>
+          <th>Kategória <button onclick="AddCategory()">Kategória hozzáadása</button></th>
+          <th>Horgony</th>
+          <th>Műveletek (kikapcsolva)</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% for (let index = 0; index < anchorInfo.length && index < 50; index++) { %>
+        <tr>
+          <td><input type="text" name="redirectionTo" id="<%= anchorInfo[index].id %>.3" value="<%= anchorInfo[index].redirect %>"></td>
+          <td><select name="categoriesSelect" id="<%= anchorInfo[index].id %>.5">
+              <option value="emptyCategory" <% if (anchorInfo[index].category == '') { %> selected <% } %>></option>
+              <% for (let i = 0; i < categories.length; i++) { %>
+              <option value="<%= categories[i] %>" <% if (anchorInfo[index].category == categories[i]) { %> selected <% } %>><%= categories[i] %></option>
               <% } %>
             </select>
-          </p>
-          <p>"Átirányítás: Ide" tartalmazza
-            <input type="text" name="redirectionTo" id="RF" value="<%= filter.rt %>">
-          </p>
-          <p>"Átirányítás: Innen" tartalmazza
-            <input type="text" name="redirectionFrom" id="RT" value="<%= filter.rf %>">
-          </p>
-          <p>Referer állapota
-            <select name="refererStatus" id="RS" value="<%= filter.rs %>">
-              <option value="4" <% if (filter.rs === "4") { %>selected<% } %>>Mindegy</option>
-              <option value="0" <% if (filter.rs === "0") { %>selected<% } %>>Biztosan van</option>
-              <option value="1" <% if (filter.rs === "1") { %>selected<% } %>>Nem megállapítható</option>
-              <option value="2" <% if (filter.rs === "2") { %>selected<% } %>>Nem vizsgált</option>
-              <option value="3" <% if (filter.rs === "3") { %>selected<% } %>>Nincs</option>
-            </select>
-          </p>
-          <p>Rendezés
-            <select name="orderBy" id="OrderBy" value="<%= filter.ob %>">
-              <option value="ID" <% if (filter.ob === "ID") { %>selected<% } %>>ID</option>
-              <option value="DR" <% if (filter.ob === "DR") { %>selected<% } %>>DR</option>
-              <option value="linkCount" <% if (filter.ob === "linkCount") { %>selected<% } %>>Linkek száma</option>
-              <option value="redirectionTo" <% if (filter.ob === "redirectionTo") { %>selected<% } %>>Átirányítás: Ide</option>
-              <option value="redirectionFrom" <% if (filter.ob === "redirectionFrom") { %>selected<% } %>>Átirányítás: Innen</option>
-            </select>
-          </p>
-          <p>Rendezési sorrend
-            <select name="way" id="Way" value="<%= filter.way %>">
-              <option value="ASC" <% if (filter.way === "ASC") { %>selected<% } %>>Növekvő</option>
-              <option value="DESC" <% if (filter.way === "DESC") { %>selected<% } %>>Csökkenő</option>
-            </select>
-          </p>
-          <p>Oldalszám
-            <input type="number" name="skip" id="skip" value="<%= filter.pageNumber %>">
-          </p>
-          <button type="submit" class="btn btn-primary">Szűrés</button>
-        </div>
-      </form>
-    </div>
-    <div class="table-container">
-      <div class="table-responsive">
-        <table class="table">
-          <thead>
-            <tr>
-              <th>ID</th>
-              <th>DR</th>
-              <th>Típus (Fő/Al)</th>
-              <th>Linkek száma</th>
-              <th>Kategória</th>
-              <th>Átirányítás: Ide</th>
-              <th>Átirányítás: Innen</th>
-              <th style="width: 230px;">Referer állapota</th>
-              <th>Műveletek</th>
-            </tr>
-          </thead>
-          <tbody>
-            <% for (let index = 0; index < linkData.length && index < 50; index++) { %>
-            <tr>
-              <td id="<%= linkData[index].id %>.0">#<%= linkData[index].id %></td>
-              <td id="<%= linkData[index].id %>.1"><%= linkData[index].dr %></td>
-              <td id="<%= linkData[index].id %>.5"><%= linkData[index].isMainPage %></td>
-              <td id="<%= linkData[index].id %>.2"><%= linkData[index].linkCount %></td>
-              <td id="<%= linkData[index].id %>.6"><%= linkData[index].category %></td>
-              <td><input id="<%= linkData[index].id %>.3" type="text" value="<%= linkData[index].redirectionTo %>"></td>
-              <td id="<%= linkData[index].id %>.4"><%= linkData[index].redirectionFrom %></td>
-              <td>
-                <select name="actions" class="form-control color-td-by-status" id="<%= linkData[index].id %>.7">
-                  <option value="0" <% if (linkData[index].refererStatus === 0) { %>selected<% } %>>Biztosan van</option>
-                  <option value="1" <% if (linkData[index].refererStatus === 1) { %>selected<% } %>>Nem megállapítható</option>
-                  <option value="2" <% if (linkData[index].refererStatus === 2 || linkData[index].refererStatus === undefined) { %>selected<% } %>>Nem vizsgált</option>
-                  <option value="3" <% if (linkData[index].refererStatus === 3) { %>selected<% } %>>Nincs</option>
-                </select>
-              </td>
-              <td>
-                <button onclick="Save(<%= linkData[index].id %>)" class="btn btn-primary save-button">Mentés</button>
-                <a href="/edit-one/<%= linkData[index].id %>"><button class="edit-button btn btn-secondary">Szerkesztés</button></a>
-                <button onclick="Copy(<%= linkData[index].id %>)" class="btn btn-info copy-button">Másolás</button>
-                <button onclick="Delete(<%= linkData[index].id %>)" class="btn btn-warning delete-button">Szöveg törlés</button>
-                <button onclick="PermanentDelete(<%= linkData[index].id %>)" class="btn btn-danger destroy-button">Végleges törlés</button>
-              </td>
-            </tr>
-            <% } %>
-          </tbody>
-        </table>
-      </div>
-    </div>
+          </td>
+          <td>
+            <p class="limited"><%= anchorInfo[index].anchor %></p>
+          </td>
+          <td>
+            <button onclick="Save(<%= anchorInfo[index].id %>)" class="btn btn-primary save-button">
+              <i class="fas fa-save"></i>
+            </button>
+            <button onclick="Copy(<%= anchorInfo[index].id %>)" class="btn btn-info copy-button">
+              <i class="fas fa-copy"></i>
+            </button>
+            <button onclick="Delete(<%= anchorInfo[index].id %>)" class="btn btn-warning delete-button"><i class="fas fa-times"></i></button>
+            <button onclick="PermanentDelete(<%= anchorInfo[index].id %>)" class="btn btn-danger destroy-button"><i class="fas fa-trash-alt"></i></button>
+          </td>
+        </tr>
+        <% } %>
+      </tbody>
+    </table>
   </div>
-
   <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+  <script>
+    // Wait for the DOM to be fully loaded
+    document.addEventListener("DOMContentLoaded", function() {
+      // Find all <p> elements with the "limited" class
+      var limitedParagraphs = document.querySelectorAll("p.limited");
+
+      // Loop through the selected paragraphs
+      limitedParagraphs.forEach(function(paragraph) {
+        // Get the text content of the paragraph
+        var text = paragraph.textContent;
+
+        // Split the text into lines of n characters or less
+        let n = 40;
+        var lines = [];
+        while (text.length > 0) {
+          lines.push(text.substring(0, n));
+          text = text.substring(n);
+        }
+
+        // Join the lines with a line break
+        paragraph.innerHTML = lines.join('<br>');
+      });
+    });
+  </script>
 </body>
+
 </html>

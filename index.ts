@@ -15,6 +15,7 @@ const { getCategories } = require('./script/db/db');
 const { addCategory } = require('./script/db/db');
 const { deleteCategories } = require('./script/db/db');
 const { UpdateDomainOnEditOne } = require('./script/db/db');
+const { getAnchorText } = require('./script/db/db');
 
 const express = require('express');
 const app = express();
@@ -151,6 +152,17 @@ app.post('/edit-one/:id/add-category/:newCategory', async (req: any, res: any) =
 app.post('/edit-one/:id/save/:redirect/:state/:category', async (req: any, res: any) => {
     await UpdateDomainOnEditOne(req.params['id'], req.params['redirect'], req.params['state'], req.params['category']);
     res.redirect('/edit-one/' + req.params['id']);
+});
+
+app.get('/anchor', async (req: any, res: any) => {
+    const domain = await getDomainData();
+    const referred = await getReferredData();
+    const link = await getLinkData();
+    const countOfRows = await rowCount();
+    res.render('anchor', {
+        anchorInfo: await getAnchorText(),
+        categories: await getCategories(),
+    });
 });
 
 app.get('/nuke-all/yes-i-am-sure-i-want-to-nuke-everything', async (req: any, res: any) => {

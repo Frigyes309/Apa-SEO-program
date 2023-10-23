@@ -1,5 +1,5 @@
-import { PrismaClient } from "@prisma/client";
-const { excelToPrisma } = require("../../tool/convert");
+import { PrismaClient } from '@prisma/client';
+const { excelToPrisma } = require('../../tool/convert');
 const prisma = new PrismaClient();
 
 function isMainPage(text: any): boolean {
@@ -39,13 +39,12 @@ async function insertToDb(objectRepository: any) {
             },
         });
         if (resultRPM == null) {
-            const createdReferredPageMain =
-                await prisma.referredPageMain.create({
-                    data: {
-                        refPref: converted.refPref,
-                        dr: converted.dr,
-                    },
-                });
+            const createdReferredPageMain = await prisma.referredPageMain.create({
+                data: {
+                    refPref: converted.refPref,
+                    dr: converted.dr,
+                },
+            });
             converted.refPrefId = createdReferredPageMain.id;
             noDuplication = true;
         } else {
@@ -113,8 +112,8 @@ async function insertToDb(objectRepository: any) {
         }
     }
 
-    console.log(insertedRows + " rows were inserted");
-    console.log(duplicateRows + " rows were ignored because of duplication");
+    console.log(insertedRows + ' rows were inserted');
+    console.log(duplicateRows + ' rows were ignored because of duplication');
 }
 
 async function getDomainData() {
@@ -177,15 +176,12 @@ async function getDomainDataFromId(id: number) {
                 const objectRepositoryElement = {
                     id: selected.id,
                     dr: resultReferred.dr,
-                    from:
-                        (selected.protocol ? "https://" : "http://") +
-                        resultReferred.refPref +
-                        selected.raw,
+                    from: (selected.protocol ? 'https://' : 'http://') + resultReferred.refPref + selected.raw,
                     to: to.link,
                     redirect: selected.redirect,
                     state: selected.state,
-                    category: category != null ? category.categoryText : "",
-                    anchor: anchor != null ? anchor.anchorText : "",
+                    category: category != null ? category.categoryText : '',
+                    anchor: anchor != null ? anchor.anchorText : '',
                 };
                 objectRepository.push(objectRepositoryElement);
             }
@@ -197,9 +193,9 @@ async function getDomainDataFromId(id: number) {
 
 function createFullLink(protocol: boolean, raw: string, refPref: string) {
     if (protocol == true) {
-        return "https://" + refPref + "/" + raw;
+        return 'https://' + refPref + '/' + raw;
     } else {
-        return "http://" + refPref + "/" + raw;
+        return 'http://' + refPref + '/' + raw;
     }
 }
 
@@ -253,10 +249,7 @@ async function filterByAllLinkRedirection(parameters: any) {
     const result = await prisma.domain.findMany({
         where: {
             state: parameters.state != 5 ? parameters.state : undefined,
-            refererStatus:
-                parameters.refererStatus == 4
-                    ? undefined
-                    : parameters.refererStatus,
+            refererStatus: parameters.refererStatus == 4 ? undefined : parameters.refererStatus,
             id: parameters.id,
         },
     });
@@ -269,11 +262,9 @@ async function filterByAllLinkRedirection(parameters: any) {
         });
         if (
             resultReferred != null &&
-            (
-                (result[i].protocol ? "https://" : "http://") +
-                resultReferred.refPref +
-                result[i].raw
-            ).includes(parameters.fromPage) &&
+            ((result[i].protocol ? 'https://' : 'http://') + resultReferred.refPref + result[i].raw).includes(
+                parameters.fromPage,
+            ) &&
             result[i].redirect.includes(parameters.toPage) &&
             resultReferred.dr >= parameters.drMin &&
             resultReferred.dr <= parameters.drMax
@@ -289,7 +280,7 @@ async function filterByAllLinkRedirection(parameters: any) {
                     id: result[i].lpId,
                 },
             });
-            const pageType = isMainPage(resultLP?.link) ? "Főoldal" : "Aloldal";
+            const pageType = isMainPage(resultLP?.link) ? 'Főoldal' : 'Aloldal';
             const category = await prisma.categories.findFirst({
                 where: {
                     categoryText: parameters.category,
@@ -297,66 +288,52 @@ async function filterByAllLinkRedirection(parameters: any) {
             });
             if (
                 linkCount >= parameters.linkCount &&
-                !takenRefPrefIds.includes(
-                    resultReferred.id + "-" + resultLP?.id
-                ) &&
-                (parameters.isMainPage == "Mindegyik" ||
-                    pageType == parameters.isMainPage) &&
-                (parameters.category == "Mindegyik" ||
-                    category?.id == result[i].categoryId)
+                !takenRefPrefIds.includes(resultReferred.id + '-' + resultLP?.id) &&
+                (parameters.isMainPage == 'Mindegyik' || pageType == parameters.isMainPage) &&
+                (parameters.category == 'Mindegyik' || category?.id == result[i].categoryId)
             ) {
                 let objectRepositoryElement = {
                     id: result[i].id,
                     dr: resultReferred.dr,
                     linkCount: linkCount,
                     redirectionFrom:
-                        (result[i].protocol ? "https://" : "http://") +
-                        resultReferred.refPref +
-                        "/" +
-                        result[i].raw,
+                        (result[i].protocol ? 'https://' : 'http://') + resultReferred.refPref + '/' + result[i].raw,
                     redirectionTo: result[i].redirect,
                     status: result[i].state,
                     isMainPage: pageType,
                     refererStatus: result[i].refererStatus,
                 };
                 objectRepository.push(objectRepositoryElement);
-                takenRefPrefIds.push(resultReferred.id + "-" + resultLP?.id);
+                takenRefPrefIds.push(resultReferred.id + '-' + resultLP?.id);
             }
         }
     }
-    const manipulator = parameters.way == "ASC" ? 1 : -1;
-    if (parameters.orderBy == "ID") {
+    const manipulator = parameters.way == 'ASC' ? 1 : -1;
+    if (parameters.orderBy == 'ID') {
         objectRepository = objectRepository.sort((a: any, b: any) => {
             return (a.id - b.id) * manipulator;
         });
-    } else if (parameters.orderBy == "DR") {
+    } else if (parameters.orderBy == 'DR') {
         objectRepository = objectRepository.sort((a: any, b: any) => {
             return (a.dr - b.dr) * manipulator;
         });
-    } else if (parameters.orderBy == "linkCount") {
+    } else if (parameters.orderBy == 'linkCount') {
         objectRepository = objectRepository.sort((a: any, b: any) => {
             return (a.linkCount - b.linkCount) * manipulator;
         });
-    } else if (parameters.orderBy == "redirectionFrom") {
+    } else if (parameters.orderBy == 'redirectionFrom') {
         objectRepository = objectRepository.sort((a: any, b: any) => {
             return (a.redirectionFrom - b.redirectionFrom) * manipulator;
         });
-    } else if (parameters.orderBy == "redirectionTo") {
+    } else if (parameters.orderBy == 'redirectionTo') {
         objectRepository = objectRepository.sort((a: any, b: any) => {
             return (a.redirectionTo - b.redirectionTo) * manipulator;
         });
     }
-    return await objectRepository.slice(
-        parameters.skip * 50,
-        parameters.skip * 50 + 50
-    );
+    return await objectRepository.slice(parameters.skip * 50, parameters.skip * 50 + 50);
 }
 
-async function UpdateDomainOnRedirect(
-    id: number,
-    redirect: string,
-    referer: number
-) {
+async function UpdateDomainOnRedirect(id: number, redirect: string, referer: number) {
     const result = await prisma.domain.findFirst({
         where: {
             id: id,
@@ -405,9 +382,7 @@ async function getCategories() {
             categoryText: true,
         },
     });
-    const categoryTextArray = categories.map(
-        (category) => category.categoryText
-    );
+    const categoryTextArray = categories.map((category) => category.categoryText);
     return categoryTextArray;
 }
 
@@ -423,7 +398,7 @@ async function addCategory(name: string) {
                 categoryText: name,
             },
         });
-        console.log("Category: " + name + " was added");
+        console.log('Category: ' + name + ' was added');
     }
 }
 
@@ -431,12 +406,7 @@ async function deleteCategories() {
     await prisma.categories.deleteMany();
 }
 
-async function UpdateDomainOnEditOne(
-    id: string,
-    redirect: string,
-    state: string,
-    category: string
-) {
+async function UpdateDomainOnEditOne(id: string, redirect: string, state: string, category: string) {
     const categoryId = await prisma.categories.findFirst({
         where: {
             categoryText: category,
@@ -449,19 +419,53 @@ async function UpdateDomainOnEditOne(
             },
             data: {
                 redirect: redirect,
-                state:
-                    state == "normal"
-                        ? 0
-                        : state == "spam"
-                        ? 1
-                        : state == "premium"
-                        ? 2
-                        : 3,
+                state: state == 'normal' ? 0 : state == 'spam' ? 1 : state == 'premium' ? 2 : 3,
                 categoryId: categoryId.id == null ? -1 : categoryId.id,
             },
         });
     } else return false;
     return true;
+}
+
+async function getAnchorText() {
+    //cat
+    //anchor
+    //red
+    const anchors = await prisma.anchor.findMany({
+        select: {
+            id: true,
+            anchorText: true,
+        },
+    });
+    let objectRepository: any = [];
+    for (const anchor of anchors) {
+        const result = await prisma.domain.findFirst({
+            where: {
+                anchorId: anchor.id,
+            },
+            select: {
+                id: true,
+                redirect: true,
+                categoryId: true,
+        }});
+        if (result != null) {
+            const category = await prisma.categories.findFirst({
+                where: {
+                    id: result.categoryId,
+                },
+                select: {
+                    categoryText: true,
+                },
+            });
+            let objectRepositoryElement = {
+                redirect: result.redirect,
+                category: category?.categoryText ?? '',
+                anchor: anchor.anchorText,
+            };
+            objectRepository.push(objectRepositoryElement);
+        }
+    }
+    return objectRepository;
 }
 
 module.exports = {
@@ -480,4 +484,5 @@ module.exports = {
     addCategory: addCategory,
     deleteCategories: deleteCategories,
     UpdateDomainOnEditOne: UpdateDomainOnEditOne,
+    getAnchorText: getAnchorText,
 };
