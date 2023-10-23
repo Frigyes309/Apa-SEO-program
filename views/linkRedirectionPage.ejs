@@ -1,24 +1,29 @@
 <!DOCTYPE html>
 <html>
+
 <head>
   <title>Új Link Átirányítás</title>
   <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css">
   <style>
-    
     body {
       font-family: Arial, sans-serif;
-       background-color: #f8f8f8;
+      background-color: #f8f8f8;
     }
+
     .container {
       max-width: 100%;
       margin: 0 auto;
       padding: 20px;
     }
+
     .table {
       width: 100%;
       border-collapse: collapse;
     }
-    th, td {
+
+    th,
+    td {
       padding: 12px 10px;
       text-align: center;
       border-bottom: 1px solid #ddd;
@@ -29,65 +34,65 @@
       background-color: green;
       color: white;
     }
+
     td select option[value="1"] {
       background-color: grey;
       color: black;
     }
+
     td select option[value="2"] {
       background-color: yellow;
       color: black;
     }
+
     td select option[value="3"] {
       background-color: red;
       color: white;
     }
+
     td:nth-child(6) {
       width: 1.5 times;
     }
+
     .color-td-by-status:has(option[value="0"]:checked) {
       background-color: green;
       color: black;
     }
+
     .color-td-by-status:has(option[value="1"]:checked) {
       background-color: grey;
       color: black;
     }
+
     .color-td-by-status:has(option[value="2"]:checked) {
       background-color: yellow;
       color: black;
     }
+
     .color-td-by-status:has(option[value="3"]:checked) {
       background-color: red;
       color: white;
     }
 
-    .save-button {
+    .save-button {}
 
-    }
+    .copy-button {}
 
-    .copy-button {
+    .delete-button {}
 
-    }
+    .destroy-button {}
 
-    .delete-button {
-
-    }
-
-    .destroy-button {
-
-    }
-
-    .edit-button {
-
-    }
+    .edit-button {}
 
     th {
       background-color: #f2f2f2;
       font-weight: bold;
     }
+
     tr:nth-child(even) {
       background-color: #f9f9f9;
     }
+
     button {
       padding: 8px 12px;
       margin-right: 5px;
@@ -95,12 +100,14 @@
       font-size: 14px;
       cursor: pointer;
     }
+
     td select {
       width: 100%;
       padding: 4px;
       text-align: center;
       box-sizing: border-box;
     }
+
     .color-td-by-status option {
       padding: 6px 12px;
     }
@@ -169,9 +176,9 @@
     }
   </style>
   <script>
-    document.addEventListener("DOMContentLoaded", function () {
+    document.addEventListener("DOMContentLoaded", function() {
       const filterForm = document.getElementById("filterForm");
-      filterForm.addEventListener("submit", function (event) {
+      filterForm.addEventListener("submit", function(event) {
         event.preventDefault();
         const formData = new FormData(filterForm);
         const queryParams = new URLSearchParams(formData).toString() + "&loaded=true";
@@ -181,13 +188,13 @@
     });
 
     function Save(id) {
-        event.preventDefault();
-        const formData = new FormData(filterForm);
-        const queryParams = new URLSearchParams(formData).toString() 
-        + "&dataId=" + id + "&dataString=" + document.getElementById(id + ".3").value 
-        + "&dataReferer=" + document.getElementById(id + ".7").value;
-        const url = `/link-redirection?${queryParams}`;
-        window.location.href = url;
+      event.preventDefault();
+      const formData = new FormData(filterForm);
+      const queryParams = new URLSearchParams(formData).toString() +
+        "&dataId=" + id + "&dataString=" + document.getElementById(id + ".3").value +
+        "&dataReferer=" + document.getElementById(id + ".7").value;
+      const url = `/link-redirection?${queryParams}`;
+      window.location.href = url;
     }
 
     function Delete(id) {
@@ -213,8 +220,8 @@
       if (userConfirmation) {
         event.preventDefault();
         const formData = new FormData(filterForm);
-        const queryParams = new URLSearchParams(formData).toString() 
-        + "&deleteId=" + id;
+        const queryParams = new URLSearchParams(formData).toString() +
+          "&deleteId=" + id;
         const url = `/link-redirection?${queryParams}`;
         window.location.href = url;
         alert("Törlés történt!");
@@ -242,6 +249,7 @@
     }
   </script>
 </head>
+
 <body>
   <div class="container">
     <div class="form-container">
@@ -338,7 +346,7 @@
               <td id="<%= linkData[index].id %>.2"><%= linkData[index].linkCount %></td>
               <td id="<%= linkData[index].id %>.6"><%= linkData[index].category %></td>
               <td><input id="<%= linkData[index].id %>.3" type="text" value="<%= linkData[index].redirectionTo %>"></td>
-              <td id="<%= linkData[index].id %>.4"><%= linkData[index].redirectionFrom %></td>
+              <td id="<%= linkData[index].id %>.4"><p class="limited"><%= linkData[index].redirectionFrom %></p></td>
               <td>
                 <select name="actions" class="form-control color-td-by-status" id="<%= linkData[index].id %>.7">
                   <option value="0" <% if (linkData[index].refererStatus === 0) { %>selected<% } %>>Biztosan van</option>
@@ -348,11 +356,11 @@
                 </select>
               </td>
               <td>
-                <button onclick="Save(<%= linkData[index].id %>)" class="btn btn-primary save-button">Mentés</button>
-                <a href="/edit-one/<%= linkData[index].id %>"><button class="edit-button btn btn-secondary">Szerkesztés</button></a>
-                <button onclick="Copy(<%= linkData[index].id %>)" class="btn btn-info copy-button">Másolás</button>
-                <button onclick="Delete(<%= linkData[index].id %>)" class="btn btn-warning delete-button">Szöveg törlés</button>
-                <button onclick="PermanentDelete(<%= linkData[index].id %>)" class="btn btn-danger destroy-button">Végleges törlés</button>
+                <button onclick="Save(<%= linkData[index].id %>)" class="btn btn-primary save-button"><i class="fas fa-save"></i></button>
+                <a href="/edit-one/<%= linkData[index].id %>"><button class="edit-button btn btn-secondary"><i class="fas fa-edit"></i></button></a>
+                <button onclick="Copy(<%= linkData[index].id %>)" class="btn btn-info copy-button"><i class="fas fa-copy"></i></button>
+                <button onclick="Delete(<%= linkData[index].id %>)" class="btn btn-warning delete-button"><i class="fas fa-times"></i></button>
+                <button onclick="PermanentDelete(<%= linkData[index].id %>)" class="btn btn-danger destroy-button"><i class="fas fa-trash-alt"></i></button>
               </td>
             </tr>
             <% } %>
@@ -364,12 +372,36 @@
 
   <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
   <% if (loaded !== true) { %>
-    <script>
-      window.onload = function() {
-        document.getElementById("formButton").click();
-      }
-    </script>
-  <% } %>  
+  <script>
+    window.onload = function() {
+      document.getElementById("formButton").click();
+    }
+  </script>
+  <% } %>
+  </script>
+  <script>
+    // Wait for the DOM to be fully loaded
+    document.addEventListener("DOMContentLoaded", function() {
+      // Find all <p> elements with the "limited" class
+      var limitedParagraphs = document.querySelectorAll("p.limited");
+  
+      // Loop through the selected paragraphs
+      limitedParagraphs.forEach(function(paragraph) {
+        // Get the text content of the paragraph
+        var text = paragraph.textContent;
+  
+        // Split the text into lines of 75 characters or less
+        var lines = [];
+        while (text.length > 0) {
+          lines.push(text.substring(0, 50));
+          text = text.substring(50);
+        }
+  
+        // Join the lines with a line break
+        paragraph.innerHTML = lines.join('<br>');
+      });
+    });
   </script>
 </body>
+
 </html>

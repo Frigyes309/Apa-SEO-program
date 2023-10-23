@@ -1,24 +1,29 @@
 <!DOCTYPE html>
 <html>
+
 <head>
   <title>Új Link Átirányítás</title>
   <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css">
   <style>
-    
     body {
       font-family: Arial, sans-serif;
-       background-color: #f8f8f8;
+      background-color: #f8f8f8;
     }
+
     .container {
       max-width: 100%;
       margin: 0 auto;
       padding: 20px;
     }
+
     .table {
       width: 100%;
       border-collapse: collapse;
     }
-    th, td {
+
+    th,
+    td {
       padding: 12px 10px;
       text-align: center;
       border-bottom: 1px solid #ddd;
@@ -29,65 +34,65 @@
       background-color: green;
       color: white;
     }
+
     td select option[value="1"] {
       background-color: grey;
       color: black;
     }
+
     td select option[value="2"] {
       background-color: yellow;
       color: black;
     }
+
     td select option[value="3"] {
       background-color: red;
       color: white;
     }
+
     td:nth-child(6) {
       width: 1.5 times;
     }
+
     .color-td-by-status:has(option[value="0"]:checked) {
       background-color: green;
       color: black;
     }
+
     .color-td-by-status:has(option[value="1"]:checked) {
       background-color: grey;
       color: black;
     }
+
     .color-td-by-status:has(option[value="2"]:checked) {
       background-color: yellow;
       color: black;
     }
+
     .color-td-by-status:has(option[value="3"]:checked) {
       background-color: red;
       color: white;
     }
 
-    .save-button {
+    .save-button {}
 
-    }
+    .copy-button {}
 
-    .copy-button {
+    .delete-button {}
 
-    }
+    .destroy-button {}
 
-    .delete-button {
-
-    }
-
-    .destroy-button {
-
-    }
-
-    .edit-button {
-
-    }
+    .edit-button {}
 
     th {
       background-color: #f2f2f2;
       font-weight: bold;
     }
+
     tr:nth-child(even) {
       background-color: #f9f9f9;
     }
+
     button {
       padding: 8px 12px;
       margin-right: 5px;
@@ -95,12 +100,14 @@
       font-size: 14px;
       cursor: pointer;
     }
+
     td select {
       width: 100%;
       padding: 4px;
       text-align: center;
       box-sizing: border-box;
     }
+
     .color-td-by-status option {
       padding: 6px 12px;
     }
@@ -168,37 +175,44 @@
       white-space: nowrap;
     }
   </style>
+  
   <script>
     function AddCategory() {
       var newCategory = prompt("Kategória neve:");
       if (newCategory != null) {
         let selects = document.getElementsByName("categoriesSelect")
         for (let index = 0; index < selects.length; index++) {
-            var newOption = document.createElement("option");
-            newOption.value = newCategory;
-            newOption.text = newCategory;
-            selects[index].appendChild(newOption);
+          var newOption = document.createElement("option");
+          newOption.value = newCategory;
+          newOption.text = newCategory;
+          selects[index].appendChild(newOption);
         }
         //post
         var xhr = new XMLHttpRequest();
         xhr.open("POST", window.location.href + "/add-category/" + newCategory, true);
         xhr.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
-        var data = JSON.stringify({ category: newCategory });
+        var data = JSON.stringify({
+          category: newCategory
+        });
         xhr.send(data);
         //post end
       }
     }
 
     function Save(id) {
-        var redirect = document.getElementById(id + ".3").value;
-        var state = document.getElementById(id + ".4").value;
-        var category = document.getElementById(id + ".5").value;
-        //post
-        var xhr = new XMLHttpRequest();
-        xhr.open("POST", window.location.href + "/save/" + redirect + "/" + state + "/" + category, true);
-        var data = JSON.stringify({ redirect: redirect, state: state, category: category });
-        xhr.send(data);
-        //post end
+      var redirect = document.getElementById(id + ".3").value;
+      var state = document.getElementById(id + ".4").value;
+      var category = document.getElementById(id + ".5").value;
+      //post
+      var xhr = new XMLHttpRequest();
+      xhr.open("POST", window.location.href + "/save/" + redirect + "/" + state + "/" + category, true);
+      var data = JSON.stringify({
+        redirect: redirect,
+        state: state,
+        category: category
+      });
+      xhr.send(data);
+      //post end
     }
 
     function Delete(id) {
@@ -224,8 +238,8 @@
       if (userConfirmation) {
         event.preventDefault();
         const formData = new FormData(filterForm);
-        const queryParams = new URLSearchParams(formData).toString() 
-        + "&deleteId=" + id;
+        const queryParams = new URLSearchParams(formData).toString() +
+          "&deleteId=" + id;
         const url = `/link-redirection?${queryParams}`;
         window.location.href = url;
         alert("Törlés történt!");
@@ -235,12 +249,14 @@
     }
   </script>
 </head>
+
 <body>
   <div class="container">
     <h1>Adatok:</h1>
     <table class="table">
       <thead>
         <tr>
+          <th>ID</th>
           <th>DR</th>
           <th>Honnan mutat a link</th>
           <th>Hova mutat a link</th>
@@ -252,38 +268,66 @@
       </thead>
       <tbody>
         <% for (let index = 0; index < singleInfo.length && index < 50; index++) { %>
-          <tr>
-            <td><%= singleInfo[index].dr %></td>
-            <td><%= singleInfo[index].from %></td>
-            <td><%= singleInfo[index].to %></td>
-            <td><input type="text" name="redirectionTo" id="<%= singleInfo[index].id %>.3" value="<%= singleInfo[index].redirect %>"></td>
-            <td>
-              <select name="actions" id="<%= singleInfo[index].id %>.4">
-                <option value="normal" <% if (singleInfo[index].state === 0) { %>selected<% } %>>Normál</option>
-                <option value="spam" <% if (singleInfo[index].state === 1) { %>selected<% } %>>Spam</option>
-                <option value="premium" <% if (singleInfo[index].state === 2) { %>selected<% } %>>Prémium</option>
-                <option value="tucat" <% if (singleInfo[index].state === 3) { %>selected<% } %>>Tucat link</option>
-              </select>
-              <%= singleInfo[index].state %>
-            </td>
-            <td><select name="categoriesSelect"  id="<%= singleInfo[index].id %>.5">
-                <option value="emptyCategory" <% if (singleInfo[index].category == '') { %> selected <% } %>></option>
-                <% for (let i = 0; i < categories.length; i++) { %>
-                    <option value="<%= categories[i] %>" <% if (singleInfo[index].category == categories[i]) { %> selected <% } %>><%= categories[i] %></option>
-                <% } %>
+        <tr>
+          <td>#<%= singleInfo[index].id %></td>
+          <td><%= singleInfo[index].dr %></td>
+          <td><p class="limited"><%= singleInfo[index].from %></p></td>
+          <td><p class="limited"><%= singleInfo[index].to %></p></td>
+          <td><input type="text" name="redirectionTo" id="<%= singleInfo[index].id %>.3" value="<%= singleInfo[index].redirect %>"></td>
+          <td>
+            <select name="actions" id="<%= singleInfo[index].id %>.4">
+              <option value="normal" <% if (singleInfo[index].state === 0) { %>selected<% } %>>Normál</option>
+              <option value="spam" <% if (singleInfo[index].state === 1) { %>selected<% } %>>Spam</option>
+              <option value="premium" <% if (singleInfo[index].state === 2) { %>selected<% } %>>Prémium</option>
+              <option value="tucat" <% if (singleInfo[index].state === 3) { %>selected<% } %>>Tucat link</option>
             </select>
-            <td>
-                <button onclick="Save(<%= singleInfo[index].id %>)" class="btn btn-primary save-button">Mentés</button>
-                <button onclick="Copy(<%= singleInfo[index].id %>)" class="btn btn-info copy-button">Másolás</button>
-                <button onclick="Delete(<%= singleInfo[index].id %>)" class="btn btn-warning delete-button">Szöveg törlés</button>
-                <button onclick="PermanentDelete(<%= singleInfo[index].id %>)" class="btn btn-danger destroy-button">Végleges törlés</button>
-            </td>
-            <td><%= singleInfo[index].anchor %></td>
-          </tr>
+          </td>
+          <td><select name="categoriesSelect" id="<%= singleInfo[index].id %>.5">
+              <option value="emptyCategory" <% if (singleInfo[index].category == '') { %> selected <% } %>></option>
+              <% for (let i = 0; i < categories.length; i++) { %>
+              <option value="<%= categories[i] %>" <% if (singleInfo[index].category == categories[i]) { %> selected <% } %>><%= categories[i] %></option>
+              <% } %>
+            </select>
+          <td>
+            <button onclick="Save(<%= singleInfo[index].id %>)" class="btn btn-primary save-button">
+              <i class="fas fa-save"></i>
+            </button>
+            <button onclick="Copy(<%= singleInfo[index].id %>)" class="btn btn-info copy-button">
+              <i class="fas fa-copy"></i>
+            </button>
+            <button onclick="Delete(<%= singleInfo[index].id %>)" class="btn btn-warning delete-button"><i class="fas fa-times"></i></button>
+            <button onclick="PermanentDelete(<%= singleInfo[index].id %>)" class="btn btn-danger destroy-button"><i class="fas fa-trash-alt"></i></button>
+          </td>
+          <td><%= singleInfo[index].anchor %></td>
+        </tr>
         <% } %>
       </tbody>
     </table>
   </div>
   <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+  <script>
+    // Wait for the DOM to be fully loaded
+    document.addEventListener("DOMContentLoaded", function() {
+      // Find all <p> elements with the "limited" class
+      var limitedParagraphs = document.querySelectorAll("p.limited");
+  
+      // Loop through the selected paragraphs
+      limitedParagraphs.forEach(function(paragraph) {
+        // Get the text content of the paragraph
+        var text = paragraph.textContent;
+  
+        // Split the text into lines of 75 characters or less
+        var lines = [];
+        while (text.length > 0) {
+          lines.push(text.substring(0, 50));
+          text = text.substring(50);
+        }
+  
+        // Join the lines with a line break
+        paragraph.innerHTML = lines.join('<br>');
+      });
+    });
+  </script>
 </body>
+
 </html>

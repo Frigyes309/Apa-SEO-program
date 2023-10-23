@@ -137,6 +137,7 @@ async function rowCount() {
     return result;
 }
 
+//edit-one
 async function getDomainDataFromId(id: number) {
     const result = await prisma.domain.findFirst({
         where: {
@@ -240,6 +241,7 @@ async function deleteAllRecords() {
     await prisma.title.deleteMany();
 }
 
+//link-redirection
 async function filterByAllLinkRedirection(parameters: any) {
     let takenRefPrefIds: any = [];
     const result = await prisma.domain.findMany({
@@ -300,7 +302,6 @@ async function filterByAllLinkRedirection(parameters: any) {
                 let objectRepositoryElement = {
                     id: result[i].id,
                     dr: resultReferred.dr,
-                    //isMainPage: isMainPage(resultLP?.link) ? "Főoldal" : "Aloldal",
                     linkCount: linkCount,
                     redirectionFrom:
                         (result[i].protocol ? "https://" : "http://") +
