@@ -175,7 +175,7 @@
       white-space: nowrap;
     }
   </style>
-  
+
   <script>
     function AddCategory() {
       var newCategory = prompt("Kategória neve:");
@@ -275,9 +275,19 @@
         <tr>
           <td>#<%= singleInfo[index].id %></td>
           <td><%= singleInfo[index].dr %></td>
-          <td><p class="limited"><%= singleInfo[index].from %></p></td>
-          <td><p class="limited"><%= singleInfo[index].to %></p></td>
-          <td><input type="text" name="redirectionTo" id="<%= singleInfo[index].id %>.3" value="<%= singleInfo[index].redirect %>"></td>
+          <td>
+            <p class="limited"><%= singleInfo[index].from %></p>
+          </td>
+          <td>
+            <p class="limited"><%= singleInfo[index].to %></p>
+          </td>
+          <td>
+            <% if (singleInfo[index].isMainPage) { %>
+            <input type="text" name="redirectionTo" id="<%= singleInfo[index].id %>.3" value="<%= singleInfo[index].redirect %>">
+            <% } else { %>
+            <p class="limited"><%= singleInfo[index].redirect %></p>
+            <% } %>
+          </td>
           <td>
             <select name="actions" id="<%= singleInfo[index].id %>.4">
               <option value="normal" <% if (singleInfo[index].state === 0) { %>selected<% } %>>Normál</option>
@@ -317,12 +327,12 @@
     document.addEventListener("DOMContentLoaded", function() {
       // Find all <p> elements with the "limited" class
       var limitedParagraphs = document.querySelectorAll("p.limited");
-  
+
       // Loop through the selected paragraphs
       limitedParagraphs.forEach(function(paragraph) {
         // Get the text content of the paragraph
         var text = paragraph.textContent;
-  
+
         // Split the text into lines of n characters or less
         let n = 40;
         var lines = [];
@@ -330,7 +340,7 @@
           lines.push(text.substring(0, n));
           text = text.substring(n);
         }
-  
+
         // Join the lines with a line break
         paragraph.innerHTML = lines.join('<br>');
       });

@@ -137,7 +137,7 @@ app.get('/link-redirection', async (req: any, res: any) => {
 
 app.get('/edit-one/:id', async (req: any, res: any) => {
     const objectRepository = await getDomainDataFromId(Number(req.params['id']));
-    //console.log(objectRepository);
+    console.log(objectRepository[0].isMainPage);
     res.render('editOneRedirect', {
         singleInfo: objectRepository,
         categories: await getCategories(),

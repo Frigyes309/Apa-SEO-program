@@ -5,7 +5,6 @@ const prisma = new PrismaClient();
 function isMainPage(text: any): boolean {
     const regex = /\//g;
     const matches = text.match(regex);
-
     return matches ? matches.length === 3 : false;
 }
 
@@ -182,6 +181,7 @@ async function getDomainDataFromId(id: number) {
                     state: selected.state,
                     category: category != null ? category.categoryText : '',
                     anchor: anchor != null ? anchor.anchorText : '',
+                    isMainPage: isMainPage(to.link),
                 };
                 objectRepository.push(objectRepositoryElement);
             }
@@ -447,7 +447,8 @@ async function getAnchorText() {
                 id: true,
                 redirect: true,
                 categoryId: true,
-        }});
+            },
+        });
         if (result != null) {
             const category = await prisma.categories.findFirst({
                 where: {
