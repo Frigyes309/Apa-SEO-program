@@ -435,6 +435,7 @@ async function getAnchorText() {
         select: {
             id: true,
             anchorText: true,
+            anchorEnvironment: true,
         },
     });
     let objectRepository: any = [];
@@ -447,6 +448,7 @@ async function getAnchorText() {
                 id: true,
                 redirect: true,
                 categoryId: true,
+                titleId: true,
             },
         });
         if (result != null) {
@@ -458,10 +460,20 @@ async function getAnchorText() {
                     categoryText: true,
                 },
             });
+            const title = await prisma.title.findFirst({
+                where: {
+                    id: result.titleId,
+                },
+                select: {
+                    titleText: true,
+                },
+            });
             let objectRepositoryElement = {
                 redirect: result.redirect,
                 category: category?.categoryText ?? '',
                 anchor: anchor.anchorText,
+                anchorEnvironment: anchor.anchorEnvironment,
+                title: title?.titleText ?? '',
             };
             objectRepository.push(objectRepositoryElement);
         }

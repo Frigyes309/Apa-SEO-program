@@ -2,7 +2,7 @@
 <html>
 
 <head>
-  <title>Új Link Átirányítás</title>
+  <title>Horgonyok</title>
   <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css">
   <style>
@@ -262,6 +262,8 @@
           <th>Mire van átirányítva</th>
           <th>Kategória <button onclick="AddCategory()">Kategória hozzáadása</button></th>
           <th>Horgony</th>
+          <th>Szövegkörnyezet</th>
+          <th>Title</th>
           <th>Műveletek (kikapcsolva)</th>
         </tr>
       </thead>
@@ -278,7 +280,11 @@
           </td>
           <td>
             <p class="limited"><%= anchorInfo[index].anchor %></p>
+          <td>
+            <p class="limited"><%= anchorInfo[index].anchorEnvironment %></p>
           </td>
+          <td>
+            <p class="limited"><%= anchorInfo[index].title %></p>
           <td>
             <button onclick="Save(<%= anchorInfo[index].id %>)" class="btn btn-primary save-button">
               <i class="fas fa-save"></i>
@@ -307,7 +313,7 @@
         var text = paragraph.textContent;
 
         // Split the text into lines of n characters or less
-        let n = 41;
+        let n = 20;
         var lines = [];
         while (text.length > 0) {
           lines.push(text.substring(0, n));
