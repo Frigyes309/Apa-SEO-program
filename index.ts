@@ -19,7 +19,7 @@ const { getAnchorText } = require('./script/db/db');
 
 const express = require('express');
 const app = express();
-const port = 2525;
+const port = 2552;
 app.set('view engine', 'ejs');
 
 app.get('/create', async (req: any, res: any) => {
