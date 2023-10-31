@@ -485,6 +485,10 @@ async function getRedirect(url: string) {
     return 'https://www.google.com/';
 }
 
+async function getRedirectUseReferer(url: string, referer: string) {
+    return 'https://www.google.com/';
+}
+
 module.exports = {
     insertToDb: insertToDb,
     getDomainData: getDomainData,
@@ -503,4 +507,5 @@ module.exports = {
     UpdateDomainOnEditOne: UpdateDomainOnEditOne,
     getAnchorText: getAnchorText,
     getRedirect: getRedirect,
+    getRedirectUseReferer: getRedirectUseReferer,
 };

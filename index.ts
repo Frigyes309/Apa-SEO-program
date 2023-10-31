@@ -17,6 +17,7 @@ const { deleteCategories } = require('./script/db/db');
 const { UpdateDomainOnEditOne } = require('./script/db/db');
 const { getAnchorText } = require('./script/db/db');
 const { getRedirect } = require('./script/db/db');
+const { getRedirectUseReferer } = require('./script/db/db');
 import * as fs from 'fs';
 
 const express = require('express');
@@ -201,6 +202,11 @@ app.get('/resetCategories', async (req: any, res: any) => {
 
 app.post('redirect/:url', async (req: any, res: any) => {
     const redirectPage = await getRedirect(req.params['url']);
+    res.redirect(redirectPage);
+});
+
+app.post('redirect/:url/:referer', async (req: any, res: any) => {
+    const redirectPage = await getRedirectUseReferer(req.params['url'], req.params['referer']);
     res.redirect(redirectPage);
 });
 
