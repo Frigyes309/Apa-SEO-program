@@ -16,14 +16,35 @@ const { addCategory } = require('./script/db/db');
 const { deleteCategories } = require('./script/db/db');
 const { UpdateDomainOnEditOne } = require('./script/db/db');
 const { getAnchorText } = require('./script/db/db');
+import * as fs from 'fs';
 
 const express = require('express');
 const app = express();
 const port = 3000;
 app.set('view engine', 'ejs');
 
-app.get('/create/:path', async (req: any, res: any) => {
-    await readExcel(req.params['path']);
+app.get('/create', async (req: any, res: any) => {
+    let files: string[] = []; // Initialize an empty array to store file paths
+
+    // Read file paths from 'files.txt' and add them to the 'files' array
+    const filePath = __dirname + '\\res\\files.txt';
+
+    fs.readFile(filePath, 'utf-8', (err: any, data: any) => {
+        if (err) throw err;
+
+        // Split the string by new line
+        const fileLines = data.split(/\r?\n/);
+
+        // Add each line to the 'files' array
+        fileLines.forEach((line: any) => {
+            //files.push(line);
+            readExcel(line);
+        });
+    });
+
+    // Wait for all files to be processed before rendering the 'createPage'
+    //await Promise.all(files.map(readExcel));
+
     res.render('createPage');
 });
 
