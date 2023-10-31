@@ -34,8 +34,6 @@ model Domain {
   //anchorText String @default("") //Új tábla
   anchorId  Int @default(0)
   titleId   Int @default(0)
-  //Átírányítás ide
-  //minősítés ide
 }
 
 model Anchor {
