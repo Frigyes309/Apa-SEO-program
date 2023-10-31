@@ -254,8 +254,9 @@
   <div class="container">
     <div class="form-container">
       <h1>
-      <a href="/anchor %>"><button class="edit-button btn btn-secondary">Horgonyok</button></a>
-      Szűrők</h1>
+        <a href="/anchor %>"><button class="edit-button btn btn-secondary">Horgonyok</button></a>
+        Szűrők
+      </h1>
       <form id="filterForm" action="/link-redirection" method="GET">
         <div class="filter-section">
           <p>ID
@@ -348,7 +349,9 @@
               <td id="<%= linkData[index].id %>.2"><%= linkData[index].linkCount %></td>
               <td id="<%= linkData[index].id %>.6"><%= linkData[index].category %></td>
               <td><input id="<%= linkData[index].id %>.3" type="text" value="<%= linkData[index].redirectionTo %>"></td>
-              <td id="<%= linkData[index].id %>.4"><p class="limited"><%= linkData[index].redirectionFrom %></p></td>
+              <td id="<%= linkData[index].id %>.4">
+                <p class="limited"><%= linkData[index].redirectionFrom %></p>
+              </td>
               <td>
                 <select name="actions" class="form-control color-td-by-status" id="<%= linkData[index].id %>.7">
                   <option value="0" <% if (linkData[index].refererStatus === 0) { %>selected<% } %>>Biztosan van</option>
@@ -386,19 +389,19 @@
     document.addEventListener("DOMContentLoaded", function() {
       // Find all <p> elements with the "limited" class
       var limitedParagraphs = document.querySelectorAll("p.limited");
-  
+
       // Loop through the selected paragraphs
       limitedParagraphs.forEach(function(paragraph) {
         // Get the text content of the paragraph
         var text = paragraph.textContent;
-  
+
         // Split the text into lines of 75 characters or less
         var lines = [];
         while (text.length > 0) {
           lines.push(text.substring(0, 50));
           text = text.substring(50);
         }
-  
+
         // Join the lines with a line break
         paragraph.innerHTML = lines.join('<br>');
       });

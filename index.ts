@@ -19,11 +19,11 @@ const { getAnchorText } = require('./script/db/db');
 
 const express = require('express');
 const app = express();
-const port = 2552;
+const port = 3000;
 app.set('view engine', 'ejs');
 
-app.get('/create', async (req: any, res: any) => {
-    await readExcel();
+app.get('/create/:path', async (req: any, res: any) => {
+    await readExcel(req.params['path']);
     res.render('createPage');
 });
 
@@ -131,7 +131,7 @@ app.get('/link-redirection', async (req: any, res: any) => {
         linkData: objectRepository,
         filter: filteredObjectRepository,
         categories: await getCategories(),
-        loaded: (Boolean)(req.query['loaded']),
+        loaded: Boolean(req.query['loaded']),
     });
 });
 
