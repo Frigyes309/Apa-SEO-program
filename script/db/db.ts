@@ -481,6 +481,10 @@ async function getAnchorText() {
     return objectRepository;
 }
 
+async function getRedirect(url: string) {
+    return 'https://www.google.com/';
+}
+
 module.exports = {
     insertToDb: insertToDb,
     getDomainData: getDomainData,
@@ -498,4 +502,5 @@ module.exports = {
     deleteCategories: deleteCategories,
     UpdateDomainOnEditOne: UpdateDomainOnEditOne,
     getAnchorText: getAnchorText,
+    getRedirect: getRedirect,
 };
